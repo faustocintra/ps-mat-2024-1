@@ -12,3 +12,15 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Car {
+  id               Int       @id @default(autoincrement())
+  brand            String     //Marca do carro
+  model            String     //modelo do carro
+  color            String     // cor do carro
+  year_manufacture Int        //ano de fabricação
+  imported         Boolean   @default(false) //Importado?
+  plates           String     //Placas
+  selling_date     DateTime? //Data de venda
+  selling_price    Decimal? //preço de venda
+}
