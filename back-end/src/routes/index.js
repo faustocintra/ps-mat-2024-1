@@ -7,4 +7,3 @@ router.get("/", function (req, res) {
 });
 
 export default router;
-
