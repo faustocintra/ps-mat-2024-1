@@ -16,3 +16,6 @@ npx prisma init --datasource-provider postgresql
 # Executar uma migration
 npx prisma migrate dev --name create-cars
 
+# Para quem está no micro do Laboratório
+DATABASE_URL="postgresql://postgres:fatec123*@localhost:5432/karangos?schema=public"
+

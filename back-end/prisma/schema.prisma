@@ -18,9 +18,10 @@ model Car {
   brand             String            // Marca do carrro
   model             String            // Modelo do carrro
   color             String            // Cor do carrro
-  year_manufacture  String            // Ano do Fabricação
+  year_manufacture  Int               // Ano do Fabricação
   imported          Boolean           @default(false) //Importado?
   plates            String            // Placas
   selling_date      DateTime?         // Data de Venda
   selling_prince    Decimal?          // Preço de Venda
 }
+
