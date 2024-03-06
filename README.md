@@ -13,5 +13,13 @@ npm install prisma --save-dev
 # Inicialização do Prisma
 npx prisma init --datasource-provider postgresql
 
+# Criar tabelas no arquivo schema.prisma 
+
 # Executar migration
-npx prisma migrate dev --name create-cars
+npx prisma migrate dev --name create-*nome*
+
+Comando para teste: npm run dev
+Thunderclient New Request no endereço http://localhost:8080/cars
+
+# Instalar bycrypt para criptografar senhas
+npm install bcrypt
