@@ -24,3 +24,11 @@ model Car {
   selling_date        DateTime?     // Data de venda
   selling_price       Decimal?      // Preço de venda
 } 
+
+model User {
+  id                  Int         @id @default(autoincrement())
+  fullname            String      // Nome completo
+  email               String      // Email
+  password            String      // Senha
+  is_admin            Boolean     @default(false) // É usuário administrador?
+}
