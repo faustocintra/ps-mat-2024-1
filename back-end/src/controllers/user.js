@@ -1,12 +1,21 @@
 //importando o prisma client
 import prisma from '../database/client.js'
+import bcrypt from 'bcrypt'
 
 const controller = [] //objeto vazio
 
-//Criando um novo carro
+//Criando um novo usuario
 controller.create = async function (req, res) {
     try {
-        await prisma.car.create({ data: req.body })
+        //se o campo password tiver sido passado 
+        //dentro de req.body é necessario criptografar
+        // a senha isso é feito com a biblioteca bcrypt.
+        //usando 12 passos de criptografia
+        if (req.body.password) {
+            req.body.password = await bcrypt.hash(req.body.password, 12)
+        }
+
+        await prisma.user.create({ data: req.body })
 
         //http 201: Created
         res.status(201).end()
@@ -20,7 +29,14 @@ controller.create = async function (req, res) {
 }
 controller.retrieveAll = async function (req, res) {
     try {
-        const result = await prisma.car.findMany()
+        const result = await prisma.user.findMany()
+
+
+        // Exclui o corpo "password" antes de enviar os dados
+        //para o cliente
+        for (let user of result){
+            if(user.password) delete user.password
+        }
 
         //http 200: Ok (implicito)
         res.send(result)
@@ -34,9 +50,15 @@ controller.retrieveAll = async function (req, res) {
 }
 controller.retrieveOne = async function (req, res) {
     try {
-        const result = await prisma.car.findUnique({
+        const result = await prisma.user.findUnique({
             where: { id: Number(req.params.id) }
         })
+
+        // Exclui o corpo "password" antes de enviar os dados
+        //para o cliente
+        if(result.password) delete result.password
+
+        
         //encontrou retorna HTTP 200 Ok
         if (result) res.send(result)
         //não encontrou retorna HTTP 404: not found
@@ -51,8 +73,17 @@ controller.retrieveOne = async function (req, res) {
 }
 
 controller.update = async function (req, res) {
+
     try {
-        const result = await prisma.car.update({
+
+        //se o campo password tiver sido passado 
+        //dentro de req.body é necessario criptografar
+        // a senha isso é feito com a biblioteca bcrypt.
+        //usando 12 passos de criptografia
+        if (req.body.password) {
+            req.body.password = await bcrypt.hash(req.body.password, 12)
+        }
+        const result = await prisma.user.update({
             where: { id: Number(req.params.id) },
             data: req.body
         })
@@ -68,15 +99,15 @@ controller.update = async function (req, res) {
         //http 500: internal server error
         res.status(500).end()
     }
-    
+
 }
 controller.delete = async function (req, res) {
     try {
-        const result = await prisma.car.delete({
-            where: {id: Number(req.params.id) }
+        const result = await prisma.user.delete({
+            where: { id: Number(req.params.id) }
         })
         //encontrou e excluiu -> HTTP 204 No Content
-        if(result) res.status(204).end()
+        if (result) res.status(204).end()
         //Não encontrou (e não excluiu) -> HTTP 404: Not Found
         else res.status(404).end()
     }
