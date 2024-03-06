@@ -32,3 +32,17 @@ model User {
   password            String      // Senha
   is_admin            Boolean     @default(false) // É usuário administrador?
 }
+
+model Customer {
+    id                  Int         @id @default(autoincrement())
+    name                String      // Nome 
+    ident_document      String      // Documento de identidade
+    birth_date          DateTime?    // Data de aniverário
+    street_name         String      // Nome da rua
+    house_number        String      // Numero da casa
+    complements         String?     // Complementos do endereço
+    municipality        String      // Município
+    state               String      // Estado
+    phone               String      // Telefone
+    email               String      // Email
+}
