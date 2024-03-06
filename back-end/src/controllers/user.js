@@ -1,12 +1,20 @@
 // Importando o Prisma Client
 import prisma from '../database/client.js'
+import bcrypt from 'bcrypt'
 
 const controller = {} // Objeto vazio
 
 // Criando um novo carro
 controller.create = async function (req, res) {
     try {
-        await prisma.car.create({ data: req.body})
+        // Se o campo "password" tiver sido passado
+        // dentro de req.body, é necessario criptografar a senha
+        // Isso é feito com a biblioteca bcrypt, usando 12 passos de criptografia
+        if(req.body.password) {
+            req.body.password = await bcrypt.hash(req.body.password, 12)
+        }
+
+        await prisma.user.create({ data: req.body})
 
         // HTTP 201: Created
         res.status(201).end()
@@ -21,7 +29,13 @@ controller.create = async function (req, res) {
 
 controller.retrieveAll = async function (req, res) {
     try{
-        const result = await prisma.car.findMany()
+        const result = await prisma.user.findMany()
+
+        // Exclui o campo "password" antes de enviar os dados 
+        // para o cliente
+        for(let user of result) {
+            if(user.password) delete user.password
+        }
 
         // HTTP 200: OK (implícito)
         res.send(result)
@@ -36,9 +50,13 @@ controller.retrieveAll = async function (req, res) {
 
 controller.retrieveOne = async function(req, res) {
     try{
-        const result = await prisma.car.findUnique({
+        const result = await prisma.user.findUnique({
             where: { id: Number(req.params.id)}
         })
+
+        // Exclui o campo "password" antes de enviar os dados 
+        // para o cliente
+        if(result.password) delete result.password
 
         // Encontrou: retorna HTTP 200: OK
         if(result) res.send(result)
@@ -55,7 +73,14 @@ controller.retrieveOne = async function(req, res) {
 
 controller.update = async function(req, res) {
     try {
-        const result = await prisma.car.update({
+        // Se o campo "password" tiver sido passado
+        // dentro de req.body, é necessario criptografar a senha
+        // Isso é feito com a biblioteca bcrypt, usando 12 passos de criptografia
+        if(req.body.password) {
+            req.body.password = await bcrypt.hash(req.body.password, 12)
+        }
+        
+        const result = await prisma.user.update({
             where: { id: Number(req.params.id) },
             data: req.body
         })
@@ -75,7 +100,7 @@ controller.update = async function(req, res) {
 
 controller.delete = async function (req, res) {
     try {
-        const result = await prisma.car.delete({
+        const result = await prisma.user.delete({
             where: { id: Number(req.params.id) }
         })
         // encontrou e excluiu
