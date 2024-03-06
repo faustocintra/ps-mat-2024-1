@@ -17,9 +17,10 @@ npx prisma init --datasource-provider postgresql
 
 # Executar migration
 npx prisma migrate dev --name create-*nome*
+criar arquivos de controller, routes e icluir route em app.jsx
 
 Comando para teste: npm run dev
-Thunderclient New Request no endereço http://localhost:8080/cars
+Thunderclient New Request no endereço http://localhost:8080/*route*
 
 # Instalar bycrypt para criptografar senhas
 npm install bcrypt
