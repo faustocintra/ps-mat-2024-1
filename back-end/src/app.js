@@ -3,7 +3,6 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 
 import indexRouter from "./routes/index.js";
-import usersRouter from "./routes/users.js";
 
 const app = express();
 
@@ -13,13 +12,15 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
 
 /************************************************
  * ROTAS DA API
 ************************************************/
 
-import carRouter from './routes/car.js'
-app.use('/cars', carRouter)
+import carRoute from './routes/car.js'
+app.use('/cars', carRoute)
+
+import usersRoute from './routes/users.js'
+app.use('/users', usersRoute)
 
 export default app;
