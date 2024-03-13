@@ -4,6 +4,10 @@ import logger from "morgan";
 
 import indexRouter from "./routes/index.js";
 
+import dotenv from 'dotenv';
+//carregar as variaveis de ambiente
+dotenv.config();
+
 const app = express();
 
 app.use(logger("dev"));
