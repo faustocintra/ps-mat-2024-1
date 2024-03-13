@@ -3,6 +3,10 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 
 import indexRouter from "./routes/index.js";
+
+import dotenv from 'dotenv'
+//carrega variaveis de ambiente do arquivo
+dotenv.config()
 //import usersRouter from "./routes/users.js";
 
 const app = express();

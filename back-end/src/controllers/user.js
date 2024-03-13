@@ -1,6 +1,7 @@
 //importando o prisma client
 import prisma from '../database/client.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const controller = [] //objeto vazio
 
@@ -34,8 +35,8 @@ controller.retrieveAll = async function (req, res) {
 
         // Exclui o corpo "password" antes de enviar os dados
         //para o cliente
-        for (let user of result){
-            if(user.password) delete user.password
+        for (let user of result) {
+            if (user.password) delete user.password
         }
 
         //http 200: Ok (implicito)
@@ -56,9 +57,9 @@ controller.retrieveOne = async function (req, res) {
 
         // Exclui o corpo "password" antes de enviar os dados
         //para o cliente
-        if(result.password) delete result.password
+        if (result.password) delete result.password
 
-        
+
         //encontrou retorna HTTP 200 Ok
         if (result) res.send(result)
         //não encontrou retorna HTTP 404: not found
@@ -118,6 +119,51 @@ controller.delete = async function (req, res) {
         res.status(500).end()
     }
 
+
+}
+
+controller.login = async function (req, res) {
+    try {
+
+        //busca o usuario pelo e-mail passado
+        const user = await prisma.user.findUnique({
+            where: { email: req.body?.email }
+        })
+        //se usuario nao for encontrado, retorna
+        //HTTP 401: Unauthorized
+        if (!user) return res.send(401).end
+        //usuario encontrado conferimos a senha
+        const passwordOk = await bcrypt.compare(req.body.password, user.password)
+
+        //senha errada, retorna
+        //HTTP 401: Unauthorized
+        if (!passwordOk) return res.send(401).end()
+
+        //Usuário e senha OK, passamos do procedimento de gerar o token
+        //excluimos o campo "password" do usauario, para q ele nao seja incluido no token
+
+        if (user.password) delete user.password
+
+        //Geração do token
+        const token = jwt.sign(
+            user,   //dados do usuario
+            process.env.TOKEN_SECRET,  //senha para criptografar o token
+            { expiresIn: '24h' }  //praso de validade do token
+        )
+
+        //retorna HTTP 200: ok
+        res.send({ token })
+
+
+    }
+
+
+    catch (error) {
+        console.log(error)
+        //http 500: internal server error
+        res.status(500).end()
+
+    }
 
 }
 
