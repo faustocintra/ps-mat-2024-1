@@ -2,6 +2,10 @@ import express, { json, urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 
+import dotenv from 'dotenv'
+//Carregar as variáveis de ambiente do .env
+dotenv.config()
+
 import indexRouter from "./routes/index.js";
 //import usersRouter from "./routes/users.js";
 
