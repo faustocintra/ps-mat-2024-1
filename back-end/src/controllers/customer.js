@@ -3,7 +3,7 @@ import prisma from '../database/client.js'
 
 const controller = {}   // Objeto vazio
 
-// Criando um novo carro
+// Criando um novo customer
 controller.create = async function (req, res) {
   try {
     await prisma.customer.create({ data: req.body })
@@ -19,7 +19,7 @@ controller.create = async function (req, res) {
   }
 }
 
-// Mostrando todos os carros
+// Mostrando todos os customers
 controller.retrieveAll = async function (req, res) {
   try {
     const result = await prisma.customer.findMany()
@@ -36,7 +36,7 @@ controller.retrieveAll = async function (req, res) {
   }
 }
 
-// Mostrando um carro por id
+// Mostrando um customer por id
 controller.retrieveOne = async function(req, res) {
   try {
     const result = await prisma.customer.findUnique({
@@ -56,7 +56,7 @@ controller.retrieveOne = async function(req, res) {
   }
 }
 
-// Atualizando/modificando um carro
+// Atualizando/modificando um customer
 controller.update = async function(req, res) {
   try {
     const result = await prisma.customer.update({
@@ -77,7 +77,7 @@ controller.update = async function(req, res) {
   }
 }
 
-// Removendo um carro
+// Removendo um customer
 controller.delete = async function(req, res) {
   try {
     const result = await prisma.customer.delete({
