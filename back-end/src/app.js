@@ -2,6 +2,10 @@ import express, { json, urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 
+import dotenv from 'dotenv'
+//Carregar as variáveis de ambiente do arquivo .env
+dotenv.config()
+
 import indexRouter from "./routes/index.js";
 
 const app = express();
@@ -14,7 +18,7 @@ app.use(cookieParser());
 app.use("/", indexRouter);
 
 /***************************************
- Roteas de API
+ Rotas de API
  ***************************************/
 
 import carRoute from './routes/car.js'

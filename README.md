@@ -24,3 +24,15 @@ Thunderclient New Request no endereço http://localhost:8080/*route*
 
 # Instalar bycrypt para criptografar senhas
 npm install bcrypt
+
+# Instalar jsonwebtoken para autenticação de usuário
+npm install jsonwebtoken
+
+# Criar método em controller/user
+controller.login
+
+# Instalar dotenv
+npm install dotenv
+criar senha TOKEN_SECRET no arquivo .env
+importar dotenv no arquivo app.js
+passar o TOKEN_SECRET para gerar token em controller.login
