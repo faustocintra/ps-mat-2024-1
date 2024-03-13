@@ -17,6 +17,9 @@ app.use("/", indexRouter);
 import carRoute from './routes/car.js'
 app.use('/cars', carRoute)
 
+import customerRouter from './routes/customer.js'
+app.use('/customer', customerRouter)
+
 import userRoute from './routes/user.js'
 app.use('/users', userRoute)
 
