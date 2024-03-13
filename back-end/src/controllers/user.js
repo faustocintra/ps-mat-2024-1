@@ -1,6 +1,7 @@
 //importando o prima client
 import prisma from '../database/client.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const controller = {} //objeto vazio
 
@@ -122,6 +123,49 @@ controller.delete = async function(req, res){
       //HTTP 500: Internal Server Error
       res.status(500).end()
     }
+}
+
+controller.login = async function (req, res){
+  try{
+        // busca o usuário pelo e-mail passado
+        const user = await prisma.user.findUnique({
+          where: { email: req.body?.email }
+        })
+
+        //se o usuário não for encontradi, retorna 
+        //http 401: Unauthorized
+        if(! user) return res.send(401).end()
+
+        // usuário encontrado, conferimos a senha 
+    const passwordOk = await bcrypt.compare(req.body.password, user.password)
+
+    //senha errada, retorna
+    //http 401: Unauthorized
+    if(! passwordOk) return res.send(401).end()
+
+    //usuário e senha ok, passamos ao procedimeto de gerar o token 
+
+    //exclímos o campo "password" do usuário, para que ele não
+    //seja incluído no token
+    if(user.password) delete user.password
+
+    //geração do token
+    const token = jwt.sign(
+      user,                   //dados do usuário
+      process.env.TOKEN_SECRET,               //senha para criptografar token
+      { expiresIn: '24h'}   //prazo de validade do token
+    )
+
+    //retorna HTTP 200: Ok com o token
+    res.send({token})
+
+  }
+  catch(error){
+    console.log(error)
+
+    //HTTP 500: Internal Server Error
+    res.status(500).end()
+  }
 }
 
 export default controller
