@@ -25,4 +25,7 @@ app.use('/cars', carRoute)
 import userRoute from './routes/user.js'
 app.use('/users', userRoute)
 
+import customerRoute from './routes/customer.js'
+app.use('/customer', customerRoute)
+
 export default app;
