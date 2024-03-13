@@ -24,6 +24,6 @@ import userRoute from './routes/user.js'
 app.use('/users', userRoute)
 
 import customerRoute from './routes/customer.js'
-app.use('/customerS', customerRoute)
+app.use('/customers', customerRoute)
 
 export default app;
