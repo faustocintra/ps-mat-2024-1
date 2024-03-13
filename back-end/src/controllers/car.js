@@ -62,4 +62,20 @@ controller.update = async function (req, res) {
     }
 }
 
+controller.delete = async function (req, res) {
+    try {
+      const result = await prisma.car.delete({
+        where: { id: Number(req.params.id) }
+      })
+  
+      if(result) res.status(204).end()
+      else res.status(404).end()
+    }
+    catch(error) {
+      console.log(error)
+  
+      res.status(500).end()
+    }
+  }
+
 export default controller;
