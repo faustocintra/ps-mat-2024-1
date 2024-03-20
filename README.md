@@ -27,3 +27,12 @@ npx prisma init --datasource-provider postgresql
 
 # esecutar uma migration
 npx prisma migrate dev --name init
+
+# Comando de criação do projeto front-end
+npm create vite@latest
+
+Perguntas que o comando faz:
+* Ok to proceed? y
+* Project name: front-end
+* Select a framework: React
+* Select a variant: JavaScript
