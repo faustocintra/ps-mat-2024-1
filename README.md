@@ -32,3 +32,11 @@ npx prisma migrate dev --name init
 npm install react-router-dom
 npm install @mui/material @emotion/react @emotion/styled
 npm install @fontsource/roboto
+# Comando de criação do projeto front-end
+npm create vite@latest
+
+Perguntas que o comando faz:
+* Ok to proceed? y
+* Project name: front-end
+* Select a framework: React
+* Select a variant: JavaScript
