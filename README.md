@@ -20,5 +20,26 @@ npx prisma init --datasource-provider postgresql
 # Executar Migration
 npx prisma migrate dev --name create-cars
 
+# Comando de criação do projeto front-end
+npm create vite@latest
+
+Perguntas que o comando faz:
+Ok to proceed? y
+Project name: front-end
+√ Select a framework: React
+√ Select a variant: JavaScript
+
+# instalando MUI
+
+npm install @mui/material @emotion/react @emotion/styled
+
+# instalando fonte roboto
+
+npm install @fontsource/roboto
+
+# instalando icones
+
+npm install @mui/icons-material
+
 
 
