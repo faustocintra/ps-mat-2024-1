@@ -29,9 +29,9 @@ npx prisma init --datasource-provider postgresql
 npx prisma migrate dev --name init
 
 # instalação de bibliotecas adicionais
-npm install react-router-dom
-npm install @mui/material @emotion/react @emotion/styled
-npm install @fontsource/roboto
+* npm install react-router-dom
+* npm install @mui/material @emotion/react @emotion/styled
+* npm install @fontsource/roboto
 # Comando de criação do projeto front-end
 npm create vite@latest
 
