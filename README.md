@@ -2,7 +2,7 @@
 npx @aka-demy/create-express-app
 
 Perguntas feitas pelo comando:
- * Give a name for the app: back end
+ * Give a name for the app: back-end
  * Language: Javascript
  * Template engine: none
  * Package manager: npm
@@ -36,3 +36,23 @@ npm install dotenv
 criar senha TOKEN_SECRET no arquivo .env
 importar dotenv no arquivo app.js
 passar o TOKEN_SECRET para gerar token em controller.login
+
+# Comando de criação do projeto front-end
+npm create vite@latest
+
+Perguntas feitas pelo comando:
+* Ok to proceed? y
+* Project name: front-en
+* Select a framework: React
+* Select a variant: JavaScript
+
+Em seguida, executar os seguintas comandos:
+cd front-end
+npm install
+npm run dev
+
+# Instalação de bibliotecas adicionais no projeto de front-end
+npm install react-router-dom
+npm install @mui/material @emotion/react @emotion/styled
+npm install @fontsource/roboto
+npm install @mui/icons-material
