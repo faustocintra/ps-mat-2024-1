@@ -15,6 +15,8 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use(auth)
+
 app.use("/", indexRouter);
 
 
@@ -25,6 +27,7 @@ import customerRouter from './routes/customer.js'
 app.use('/customer', customerRouter)
 
 import userRoute from './routes/user.js'
+import auth from "./middleware/auth.js";
 app.use('/users', userRoute)
 
 export default app;
