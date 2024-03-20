@@ -22,6 +22,9 @@ app.use("/", indexRouter);
  * ROTAS DA API
 ************************************************/
 
+import auth from './middleware/auth.js'
+app.use(auth)
+
 import carRoute from './routes/car.js'
 app.use('/cars', carRoute)
 
