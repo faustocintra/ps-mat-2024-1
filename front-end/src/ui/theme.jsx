@@ -8,7 +8,13 @@ const theme = createTheme({
             main: yellow[500]
         },
         secondary: {        //Cor secundaria
-            main: grey[500]
+            main: pink[500]
+        }
+    },
+    typography: {
+        h1: {
+            fontSize: '30pt',
+            fontWeight: 'bold'
         }
     }
 })
