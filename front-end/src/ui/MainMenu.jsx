@@ -1,7 +1,9 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
 
 export default function MainMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -15,16 +17,19 @@ export default function MainMenu() {
 
   return (
     <div>
-      <Button
-        id="basic-button"
-        color="secondary"
+      <IconButton
+        size="large"
+        edge="start"
+        color="inherit"
+        aria-label="menu"
+        sx={{ mr: 2 }}
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        Cliente
-      </Button>
+        <MenuIcon />
+      </IconButton>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -34,11 +39,17 @@ export default function MainMenu() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Cadastrar </MenuItem>
-        <MenuItem onClick={handleClose}>Atualizar/Inativar </MenuItem>
-        <MenuItem onClick={handleClose}>Criar Ficha de Treino</MenuItem>
+        <MenuItem 
+        onClick={handleClose}
+        component={Link} to = "/">
+          Pagina Inicial 
+        </MenuItem>
 
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem 
+        onClick={handleClose}
+        component={Link} to = "/login">
+          Entrar
+        </MenuItem>
       </Menu>
     </div>
   );

@@ -2,22 +2,33 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { Box } from '@mui/material';
 
 import './App.css'
 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './ui/theme';
-import  CssBaseline from '@mui/material/CssBaseline';
+import CssBaseline from '@mui/material/CssBaseline';
+
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes/AppRoutes';
 
 import TopBar from './ui/TopBar';
+import FooterBar from './ui/FooterBar';
 
 function App() {
- 
+
   return (
     <>
       <ThemeProvider theme={theme}>
-          <CssBaseline/>
-      <TopBar />
+        <BrowserRouter>
+          <CssBaseline />
+          <TopBar />
+          <Box sx={{ margin: '24px 24px 72px 24px', }}>
+          <AppRoutes />
+          </Box>
+          <FooterBar />
+        </BrowserRouter>
       </ThemeProvider>
     </>
   )
