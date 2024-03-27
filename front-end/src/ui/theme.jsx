@@ -10,6 +10,12 @@ const theme = createTheme ({
         secondary: {
             main: pink[500]      // Cor secundária
         }
+    },
+    typography: {
+        h1: {
+            fontSize: '30pt',
+            fontWeight: 'bold'
+        }
     }
 })
 
