@@ -8,14 +8,24 @@ import {ThemeProvider} from '@mui/material/styles';
 import theme from './ui/theme';
 import TopBar from './ui/TopBar'
 import { CssBaseline } from '@mui/material';
+import FooterBar from './ui/FooterBar';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes/AppRoutes';
+import Box from '@mui/material/Box'
 
 function App() {
 
   return (
     <>
     <ThemeProvider theme = {theme}>
+    <BrowserRouter>
     <CssBaseline />
     <TopBar />
+    <Box sx={{ margin: '24px 24px 72px 24px'}}> 
+    <AppRoutes />
+    </Box>
+    </BrowserRouter>
+    <FooterBar />
     </ThemeProvider>
     </>
   )

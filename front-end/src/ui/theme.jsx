@@ -10,7 +10,14 @@ const theme = createTheme({
         secondary: {
             main: pink[500] //cor secundaria
         }
+},
+typography: {
+    h1:{
+        fontSize: '30pt',
+        fontWeight: 'bold'
 }
+}
+
 })
 
 export default theme
