@@ -167,4 +167,11 @@ controller.login = async function (req, res) {
   }
 }
 
+controller.me = function(req, res) {
+
+  // Retorna os dados do usuário que está autenticado
+  res.send(req.user)
+  
+}
+
 export default controller
