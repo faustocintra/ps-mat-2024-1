@@ -165,6 +165,13 @@ controller.login = async function (req, res) {
 
 
   }
+
+  controller.me = function(req, res){
+    // Retorna as informações do usuário logado que foram armazenadas em req.authuser em src/midleware/auth.js
+    
+    // HTTP: OK (implícito)
+    res.send(req.authUser)
+  }
 }
 
 export default controller
