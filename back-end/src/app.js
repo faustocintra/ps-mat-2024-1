@@ -1,14 +1,20 @@
 import express, { json, urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-
+import cors from 'cors'
 import dotenv from 'dotenv'
-// Carrega as variáveis de ambiente do arquivo .env
-dotenv.config()
 
 import indexRouter from "./routes/index.js";
 
+// Carrega as variáveis de ambiente do arquivo .env
+dotenv.config()
+
 const app = express();
+
+app.use(cors({
+  origin: process.env.FRONT_END_URL.split(','),
+  credentials: true
+}))
 
 app.use(logger("dev"));
 app.use(json());
@@ -20,6 +26,8 @@ app.use("/", indexRouter);
 /************************************************
  * ROTAS DA API
 ************************************************/
+import auth from './middleware/auth.js'
+app.use(auth)
 
 import carRoute from './routes/car.js'
 app.use('/cars', carRoute)
@@ -31,3 +39,4 @@ import customerRoute from './routes/customer.js'
 app.use('/customers', customerRoute)
 
 export default app;
+
