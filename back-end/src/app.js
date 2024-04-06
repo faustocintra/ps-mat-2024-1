@@ -3,13 +3,20 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 
 import dotenv from 'dotenv'
-//Carrega as variáveis de ambiente do arquivo .env
+// Carrega as variáveis de ambiente do arquivo .env
 dotenv.config()
 
 import indexRouter from "./routes/index.js";
 //import usersRouter from "./routes/users.js";
 
 const app = express();
+
+import cors from 'cors'
+
+app.use(cors({
+  origin: process.env.FRONT_END_URL.split(','),
+  credentials: true
+}))
 
 app.use(logger("dev"));
 app.use(json());
@@ -19,11 +26,12 @@ app.use(cookieParser());
 app.use("/", indexRouter);
 //app.use("/users", usersRouter);
 
-/******************************************************** 
- * ROTAS DA API ****************************************/
+/************************************************
+ * ROTAS DA API
+************************************************/
 
-//Middleware que protege as rotas com autenticação 
-import auth from "./middleware/auth.js";
+// Middleware que protege as rotas com autenticação
+import auth from './middleware/auth.js'
 app.use(auth)
 
 import carRoute from './routes/car.js'
