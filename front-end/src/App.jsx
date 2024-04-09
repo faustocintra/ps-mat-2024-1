@@ -1,33 +1,42 @@
+import React from 'react';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { Box } from '@mui/material';
+
 import './App.css'
 
-import { ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles';
 import theme from './ui/theme';
-import  CssBaseline  from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box'
+import CssBaseline from '@mui/material/CssBaseline';
 
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
 
 import TopBar from './ui/TopBar';
 import FooterBar from './ui/FooterBar';
+import AuthUSerContext from './Contexts/AuthUserContext';
 
 function App() {
+  //Armazena globalmente informações de usuario autenticado
+  const [authUser, setAuthUser] = React.useState(null)
+
+  
 
   return (
     <>
       <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <CssBaseline/>
-        <TopBar />
-        <Box sx={{ margin: '24px 24px 72px 24px'}}>
+        <BrowserRouter>
+          <CssBaseline />
+          <AuthUSerContext.Provider value={{authUser, setAuthUser}}>
+          <TopBar />
+          <Box sx={{ margin: '24px 24px 72px 24px', }}>
           <AppRoutes />
-        </Box>
-        <FooterBar />
-      </BrowserRouter>
+          </Box>
+          <FooterBar />
+          </AuthUSerContext.Provider>
+        </BrowserRouter>
       </ThemeProvider>
     </>
   )
