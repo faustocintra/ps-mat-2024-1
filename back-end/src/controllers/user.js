@@ -152,7 +152,7 @@ controller.login = async function (req, res) {
         )
 
         //retorna HTTP 200: ok
-        res.send({ token })
+        res.send({ token, user })
 
 
     }
@@ -173,6 +173,7 @@ controller.me = function(req, res) {
 
     //HTTP: OK(implicito)
     res.send(req.authUser)
+    
 }
 
 

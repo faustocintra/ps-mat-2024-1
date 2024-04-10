@@ -5,7 +5,7 @@ export default function HomePage(){
     return (
         <>
             <Typography variant="h1">
-                Bem-vindo ao sistema Karalhos
+                Bem-vindo ao sistema Karangos
                 
 
             </Typography>

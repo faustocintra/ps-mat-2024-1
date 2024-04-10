@@ -6,6 +6,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Notification from "../Notification";
 import {useNavigate} from 'react-router-dom'
 import Waiting from "../waiting";
+import AuthUSerContext from "../../Contexts/AuthUserContext";
 
 import myfetch from "../../lib/myfetch";
 
@@ -30,7 +31,7 @@ export default function LoginPage() {
         notif
 
     } = state
-
+    const {setAuthUser} = React.useContext(AuthUSerContext)
     const navigate = useNavigate()
     const handleClickShowPassword = () => setState({ ...state, showPassword: !showPassword});
 
@@ -54,7 +55,12 @@ async function handleSubmit(event){
 
         //armazena o token no localStorage (Inseguro isso é provisorio)
         window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response. token)
-       
+
+       // armazena as informações do usuario autenticado no contexto
+       //AuthUserContext
+       setAuthUser(response.user)
+
+
         //Mostra notificação de sucesso
         setState({...state, showWaiting: false, notif: {
             show:true,
