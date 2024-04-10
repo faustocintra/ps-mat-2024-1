@@ -6,11 +6,11 @@ import InputAdornment from '@mui/material/InputAdornment'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import IconButton from '@mui/material/IconButton'
-import Button from '@mui/material/Button'
 import myfetch from '../lib/myfetch'
 import Notification from '../ui/Notification'
 import { useNavigate } from 'react-router-dom'
 import Waiting from '../ui/Waiting'
+import AuthUserContext from '../contexts/AuthUserContext'
 
 export default function LoginPage() {
 
@@ -34,6 +34,8 @@ export default function LoginPage() {
     showWaiting,
     notif
   } = state
+
+  const { setAuthUser } = React.useContext(AuthUserContext)
 
   const navigate = useNavigate()
 
@@ -60,6 +62,11 @@ export default function LoginPage() {
 
       //Armazena o token no localStorage (Inseguro!! Isso é provisório)
       window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
+
+        // Armazena as informações do usuário autenticado no contexto
+      // AuthUserContext
+      setAuthUser(response.user)
+
 
       //TODO: dar feedback de login OK. Mostra notificação de sucesso
       setState({...state, 

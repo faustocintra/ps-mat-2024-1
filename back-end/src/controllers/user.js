@@ -148,8 +148,8 @@ controller.login = async function (req, res) {
             { expiresIn: '24h'}                  //Przao de validade do token
          )
 
-         //retorna HTTP 200: OK com o token
-         res.send({token})
+        // Retorna HTTP 200: OK com o token e o usuário autenticado
+    res.send({token, user})
     }
 
     catch(error){

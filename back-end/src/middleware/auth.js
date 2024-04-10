@@ -22,15 +22,15 @@ Sendo o caso, permite continuar sem verificar a autenticação
         }
     }
 
-    /* PROCESSO DE VERIFICAÇÃO DE TOKEN DE AUTORIZAÇÃO */
+    /* PROCESSO DE VERIFICAÇÃO DE TOKEN DE AUTENTICAÇÃO */
 
-    // O token é enviado por meio do cabeçalho 'authorization'
-    const authHeader = req.headers['authorization']
+    // O token é enviado por meio do cabeçalho 'authentication'
+    const authHeader = req.headers['authentication']
 
     //O token não foi passado -> HTTP 403: Forbidden
     if(! authHeader) return res.status(403).end()
 
-    // Extrai o token de dentro do cabeçalho 'authorization'
+    // Extrai o token de dentro do cabeçalho 'authentication'
     const authHeaderParts = authHeader.split(' ')
     
     // O token corresponde a segunda parte do cabeçalho

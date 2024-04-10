@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import logo from '../assets/karangos-logo-600px.png';
 import MainMenu from './MainMenu'
+import AuthControl from './AuthControl'
 
 export default function TopBar() {
   return (
@@ -15,7 +16,7 @@ export default function TopBar() {
           <Box sx={{ flexGrow: 1 }}>
             <img src={logo} alt="Logotipo Karangos" style={{ width: '300px '}} />
           </Box>
-          <Button color="inherit">Login</Button>
+          <AuthControl />
         </Toolbar>
       </AppBar>
     </Box>
