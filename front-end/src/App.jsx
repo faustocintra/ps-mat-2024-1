@@ -19,9 +19,28 @@ import AppRoutes from './routes/AppRoutes'
 
 import Box from '@mui/material/Box'
 
+import myfetch from './lib/myfetch'
+
 function App() {
   // Armazena globalmente as informações do usuário autenticado
   const [authUser, setAuthUser] = React.useState(null)
+
+  async function fetchAuthUser() {
+    try{
+      const authUser = await myfetch.get('/users/me')
+      if(authUser) setAuthUser (authUser)
+    }
+    catch(error){
+      console.error(error)
+    }
+  }
+
+  // este useEffect() será executado apenas uma vez, quando o componente 
+  //app for carregado (setor de dependência vazio). Ele irá perguntar
+  // ao back-end se existe algum usuário autenticado e, caso haja, irá armazenar
+  React.useEffect(() => {
+    fetchAuthUser()
+  }, [])
 
   return (
     <>
