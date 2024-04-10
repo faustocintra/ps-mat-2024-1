@@ -32,7 +32,7 @@ export default function(req, res, next) {
   // O token não foi passado ~> HTTP 403: Forbidden
   if(! authHeader) return res.status(403).end()
 
-  // Extrai o token de dentro do cabeçalho 'authorization'
+  // Extrai o token de dentro do cabeçalho 'authentication'
   const authHeaderParts = authHeader.split(' ')
   // O token corresponde à segunda parte do cabeçalho
   const token = authHeaderParts[1]
