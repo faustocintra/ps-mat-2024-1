@@ -23,13 +23,13 @@ export default function (req, res, next) {
 
 /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTORIZAÇÃO */
 
-// O token é enviado por meio do header 'authorization'
-const authHeader = req.headers['authorization']
+// O token é enviado por meio do header 'authentication'
+const authHeader = req.headers['authentication']
 
 // O token não foi passado -> HTTP 403: Forbiden
 if (!authHeader) return res.status(403).end()
 
-// Extrai o token de dentro do cabeçalho 'authorization'
+// Extrai o token de dentro do cabeçalho 'authentication'
 const authHeaderParts = authHeader.split('')
 // O token corresponde à segunda parte do cabeçalho
 const token = authHeaderParts[1]
