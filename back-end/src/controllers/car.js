@@ -1,81 +1,96 @@
-import prisma from "../database/client.js";
+// Importando o Prisma Client
+import prisma from '../database/client.js'
 
-const controller = {}
+const controller = {}   // Objeto vazio
 
+// Criando um novo carro
+controller.create = async function (req, res) {
+  try {
+    await prisma.car.create({ data: req.body })
 
-controller.create = async (req, res) => {
-    try {
-        await prisma.car.create({ data: req.body })
-        res.status(201).end();
-    } catch (error) {
-        console.log(error)
-        res.status(500).end();
-    }
+    // HTTP 201: Created
+    res.status(201).end()
+  }
+  catch(error) {
+    console.log(error)
+
+    // HTTP 500: Internal Server Error
+    res.status(500).end()
+  }
 }
 
-controller.retrieveAll = async (req, res) => {
-    try {
-        const data = await prisma.car.findMany();
+controller.retrieveAll = async function (req, res) {
+  try {
+    const result = await prisma.car.findMany()
 
-        res.send(data).end();
-    } catch (error) {
-        console.log(error);
-        res.status(500).end();
-    }
+    // HTTP 200: OK (implícito)
+    res.send(result)
+
+  }
+  catch(error) {
+    console.log(error)
+
+    // HTTP 500: Internal Server Error
+    res.status(500).end()
+  }
 }
 
-controller.retrieveOne = async (req, res) => {
-    try {
-        const data = await prisma.car.findUnique({
-            where: {
-                id: Number(req.params.id)
-            }
-        })
-        if (data) {
-            res.send(data).end();
-        } else {
-            res.status(404).end();
-        }
+controller.retrieveOne = async function(req, res) {
+  try {
+    const result = await prisma.car.findUnique({
+      where: { id: Number(req.params.id) }
+    })
 
-    } catch (error) {
-        console.log(error);
-        res.status(500).end();
-    }
+    // Encontrou: retorna HTTP 200: OK
+    if(result) res.send(result)
+    // Não encontrou: retorna HTTP 404: Not Found
+    else res.status(404).end()
+  }
+  catch(error) {
+    console.log(error)
+
+    // HTTP 500: Internal Server Error
+    res.status(500).end()
+  }
 }
 
-controller.update = async function (req, res) {
-    try {
-        const result = await prisma.car.update({
-            where: { id: Number(req.params.id) },
-            data: req.body
-        })
+controller.update = async function(req, res) {
+  try {
+    const result = await prisma.car.update({
+      where: { id: Number(req.params.id) },
+      data: req.body
+    })
 
-        if (result) {
-            res.status(204).end()
-        } else {
-            res.status(404).end()
-        }
-    }
-    catch (error) {
-        console.error(error)
-        res.status(500).send(error)
-    }
+    // Encontrou e atualizou: retorna HTTP 204: No Content
+    if(result) res.status(204).end()
+    // Não encontrou (e não atualizou): retorna HTTP 404: Not Found
+    else res.status(404).end()
+  }
+  catch(error) {
+    console.log(error)
+
+    // HTTP 500: Internal Server Error
+    res.status(500).end()
+  }
 }
 
 controller.delete = async function (req, res) {
-    try {
-      const result = await prisma.car.delete({
-        where: { id: Number(req.params.id) }
-      })
-  
-      if(result) res.status(204).end()
-      else res.status(404).end()
-    }
-    catch(error) {
-      console.log(error)
-  
-      res.status(500).end()
-    }
-  }
+  try {
+    const result = await prisma.car.delete({
+      where: { id: Number(req.params.id) }
+    })
 
-export default controller;
+    // Encontrou e excluiu ~> HTTP 204: No Content
+    if(result) res.status(204).end()
+    // Não encontrou (e não excluiu) ~> HTTP 404: Not Found
+    else res.status(404).end()
+  }
+  catch(error) {
+    console.log(error)
+
+    // HTTP 500: Internal Server Error
+    res.status(500).end()
+  }
+}
+
+export default controller

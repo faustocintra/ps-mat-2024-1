@@ -14,6 +14,3 @@ CREATE TABLE "Customer" (
 
     CONSTRAINT "Customer_pkey" PRIMARY KEY ("id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "Customer_email_key" ON "Customer"("email");
