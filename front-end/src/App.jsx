@@ -22,14 +22,31 @@ function App() {
   // Armazena globalmente as informações do usuário autenticado
   const [authUser, setAuthUser] = React.useState(null)
 
+  async function fetchAuthUser() {
+    try {
+      const authUser = await myfetch.get('/users/me')
+      if (authUser) setAuthUser(authUser)
+    }
+    catch (error) {
+      console.error(error)
+    }
+  }
+
+  // Este useEffect() será executado apenas uma vez, quando o componente
+  // App for carregado (note o vetor de dependências vazio). Ele irá perguntar
+  // ao back-end se existe algum usuário autenticado e, caso haja, irá armazenar
+  // as informações dele em authUser
+  React.useEffect(() => {
+    fetchAuthUser()
+  }, [])
   return (
     <>
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <CssBaseline />
-          <AuthUserContext.Provider value={{authUser, setAuthUser}}>
+          <AuthUserContext.Provider value={{ authUser, setAuthUser }}>
             <TopBar />
-            <Box sx={{ margin: '24px 24px 72px 24px'}}>
+            <Box sx={{ margin: '24px 24px 72px 24px' }}>
               <AppRoutes />
             </Box>
             <FooterBar />
