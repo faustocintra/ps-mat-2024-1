@@ -11,6 +11,7 @@ import myfetch from '../lib/myfetch'
 import Notification from '../ui/Notification'
 import { useNavigate } from 'react-router-dom'
 import Waiting from '../ui/Waiting'
+import AuthUserContext from '../contexts/AuthUserContext'
 
 export default function LoginPage() {
 
@@ -34,6 +35,8 @@ export default function LoginPage() {
     notif
   } = state
 
+const {setAuthUser} = React.useContext(AuthUserContext)
+
   const navigate = useNavigate()
 
   const handleClickShowPassword = () => setState({...state, showPassword: !showPassword})
@@ -52,13 +55,17 @@ export default function LoginPage() {
     try {
 
       // Exibe o backdrop de espera
-      showState({...state, showWaiting: true})
+      setState({...state, showWaiting: true})
 
       const response = await myfetch.post('/users/login', {email, password})
       //console.log(response)
 
       // Armazena o token no localStorage (INSEGURO!! ISSO É PROVISÓRIO!!)
       window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
+
+      //Armazena as informações do usuário autenticado no contexto
+      //AuthUserContext
+      setAuthUser(response.user)
 
       // Mostra notificação de sucesso
       setState({...state,
