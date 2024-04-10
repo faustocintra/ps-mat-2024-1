@@ -18,9 +18,28 @@ import TopBar from './ui/TopBar';
 import FooterBar from './ui/FooterBar';
 import AuthUserContext from './contexts/AuthUserContext';
 
+import myfetch from './lib/myfetch';
+
 function App() {
   //Armazena globalmente as informações do usuário autenticado
   const [authUser, setAuthUser] = React.useState(null)
+
+  async function fetchAuthUser() {
+    try {
+      const authUser = await myfetch.get('/users/me')
+      if(authUser) setAuthUser(authUser)
+    }
+    catch {
+      console.error(error)
+    }
+  }
+
+  //Este useEffect será exectado apenas uma vez, quando o componente App for carregado
+  //(note o vetor de dependências vazio). Ele irá perguntar no back-end se existe algum
+  //usuário autenticadoe, caso haja, irá armazenar as informações em authUser
+  React.useEffect(() => {
+    fetchAuthUser()
+  }, [])
 
   return (
     <>
