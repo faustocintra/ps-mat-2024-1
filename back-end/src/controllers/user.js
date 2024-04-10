@@ -148,11 +148,11 @@ controller.login = async function (req, res) {
         const token = jwt.sign(
             user,   //dados do usuario
             process.env.TOKEN_SECRET,  //senha para criptografar o token
-            { expiresIn: '24h' }  //praso de validade do token
+            { expiresIn: '24h' }  //prazo de validade do token
         )
 
         //retorna HTTP 200: ok
-        res.send({ token })
+        res.send({ token, user })
 
 
     }
