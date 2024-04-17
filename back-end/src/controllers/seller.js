@@ -6,6 +6,9 @@ const controller = {}   // Objeto vazio
 // Criando um novo vendedor
 controller.create = async function (req, res) {
   try {
+    let raw_date = req.body.birth_date.split('/');
+    let birth_date = new Date(`${raw_date[2]}-${raw_date[1]}-${raw_date[0]}`)
+    req.body.birth_date = birth_date;
     await prisma.seller.create({ data: req.body })
 
     // HTTP 201: Created

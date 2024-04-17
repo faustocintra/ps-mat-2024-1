@@ -17,6 +17,7 @@ import AppRoutes from './routes/AppRoutes'
 import TopBar from './ui/TopBar'
 import FooterBar from './ui/FooterBar'
 import AuthUserContext from './contexts/AuthUserContext'
+import myfetch from './lib/myfetch';
 
 function App() {
   // Armazena globalmente as informações do usuário autenticado
