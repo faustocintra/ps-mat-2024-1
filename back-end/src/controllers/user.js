@@ -124,7 +124,6 @@ controller.delete = async function (req, res) {
 
 controller.login = async function (req, res) {
     try {
-
         //busca o usuario pelo e-mail passado
         const user = await prisma.user.findUnique({
             where: { email: req.body?.email }
