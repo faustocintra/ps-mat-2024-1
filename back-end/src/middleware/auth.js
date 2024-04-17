@@ -24,22 +24,19 @@ export default function(req, res, next) {
     }
   }
 
-  /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTORIZAÇÃO */
+  /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTENTICAÇÃO */
 
   // O token é enviado por meio do cabeçalho 'authentication'
   const authHeader = req.headers['authentication']
-
   // O token não foi passado ~> HTTP 403: Forbidden
   if(! authHeader) return res.status(403).end()
 
-  // Extrai o token de dentro do cabeçalho 'authorization'
-  const authHeaderParts = authHeader.split(' ')
+  // Extrai o token de dentro do cabeçalho 'authentication'
   // O token corresponde à segunda parte do cabeçalho
-  const token = authHeaderParts[1]
+  const token = authHeader.split(` `)[1]
 
   // Validando o token
   jwt.verify(token, process.env.TOKEN_SECRET, (error, user) => {
-
     // Token inválido ou expirado ~> HTTP 403: Forbidden
     if(error) return res.status(403).end()
 

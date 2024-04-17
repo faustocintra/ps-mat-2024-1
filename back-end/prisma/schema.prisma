@@ -14,37 +14,45 @@ datasource db {
 }
 
 model Car {
-  id                Int         @id @default(autoincrement())
-  brand             String      // Marca do carro
-  model             String      // Modelo do carro
-  color             String      // Modelo do carro
-  year_manufacture  Int         // Ano de fabricação
-  imported          Boolean     @default(false)  // Importado?
-  plates            String      // Placas
-  selling_date      DateTime?   // Data de venda
-  selling_price     Decimal?    // Preço de venda
+  id               Int       @id @default(autoincrement())
+  brand            String // Marca do carro
+  model            String // Modelo do carro
+  color            String // Modelo do carro
+  year_manufacture Int // Ano de fabricação
+  imported         Boolean   @default(false) // Importado?
+  plates           String // Placas
+  selling_date     DateTime? // Data de venda
+  selling_price    Decimal? // Preço de venda
 }
 
 model Customer {
-  id                Int         @id @default(autoincrement())
-  name              String
-  ident_document    String
-  birth_date        DateTime?
-  street_name       String
-  house_number      String
-  complements       String?
-  municipality      String
-  state             String
-  phone             String
-  email             String
+  id             Int       @id @default(autoincrement())
+  name           String
+  ident_document String
+  birth_date     DateTime?
+  street_name    String
+  house_number   String
+  complements    String?
+  municipality   String
+  state          String
+  phone          String
+  email          String
 }
 
 model User {
-  id                Int         @id @default(autoincrement())
-  fullname          String      // Nome completo
-  email             String      @unique
-  password          String
-  is_admin          Boolean     @default(false)
+  id       Int     @id @default(autoincrement())
+  fullname String // Nome completo
+  email    String  @unique
+  password String
+  is_admin Boolean @default(false)
 }
 
-
+model Seller {
+  id                Int      @id @default(autoincrement())
+  fullname          String
+  birth_date        DateTime
+  identity_document String   @unique
+  email             String   @unique
+  phone             String
+  is_manager        Boolean  @default(false)
+}
