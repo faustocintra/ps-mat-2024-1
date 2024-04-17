@@ -47,4 +47,13 @@ model User {
   is_admin          Boolean     @default(false)
 }
 
+model Seller {
+  id                  Int       @id @default(autoincrement())
+  fullname            String    
+  birth_date          DateTime?    
+  identify_document   String   @unique
+  email               String    
+  phone               String    
+  is_manager          Boolean  @default(false) 
+}
 
