@@ -1,29 +1,56 @@
-import React from 'react';
-import Typography  from '@mui/material/Typography';
+import React from 'react'
+import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import AuthUserContext from '../contexts/AuthUserContext';
-import { Link } from 'react-router-dom';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-
+import AuthUserContext from '../contexts/AuthUserContext'
+import { Link } from 'react-router-dom'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {useNavigate} from 'react-router-dom'
+ 
 export default function AuthControl() {
-    const { authUser } = React.useContext(AuthUserContext)
-    
-    if (authUser){
-        return(
-            <>
-            <AccountCircleIcon color="secondary" fontsSize="small" sx={{ mr: 1}} />
-              <Typography variant="caption">
-                {authUser.fullname}
-              </Typography>
-              <Button color="secondary">Sair</Button>
-            </>
-        )
+  const { authUser,setAuthUser } = React.useContext(AuthUserContext)
+ 
+  const navigate = useNavigate()
+ 
+  function handleLogoutButtonClick(){
+    if(confirm("Deseja realmente Sair?")){
+ 
+      //Apaga o token de autenticação do localstorage
+      window.localStorage.removeItem(import.meta.env.VITE_AUTH_TOKEN_NAME)
+ 
+      //Apaga as informações em memória do usuário autenticado
+      setAuthUser(null)
+ 
+      //Navega para a pagina de login
+      navigate('/login')
     }
-    else{
-        return(
-            <Link to="/login">
-                <Button color="secondary">Entrar</Button>
-            </Link>
-        )
-    }
+  }
+ 
+  if(authUser) {
+    return (
+      <>
+        <AccountCircleIcon color="secondary" fontSize="small" sx={{ mr: 1 }} />
+        <Typography variant="caption">
+          {authUser.fullname}
+        </Typography>
+        <Button
+         color="secondary"
+         size="small"
+         onClick={handleLogoutButtonClick}
+         sx={{
+           ml:0.75, //ml:marginLeft
+          }}>
+ 
+          Sair
+        </Button>
+      </>
+    )
+  }
+  else {
+    return (
+      <Link to="/login">
+        <Button color="secondary">Entrar</Button>
+      </Link>
+    )
+  }
+ 
 }
