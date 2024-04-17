@@ -123,11 +123,10 @@ controller.delete = async function (req, res) {
   }
 }
 
-controller.login = async function (req, res){
-  try{
+controller.login = async function (req, res) {
+  try {
 
     // Busca o usuário pelo e-mail passado
-    // O findUnique busca em campos onde não se repete
     const user = await prisma.user.findUnique({
       where: { email: req.body?.email }
     })
@@ -136,37 +135,44 @@ controller.login = async function (req, res){
     // HTTP 401: Unauthorized
     if(! user) return res.send(401).end()
 
-    // usuário encontrado, conferimos a senha
+    // Usuário encontrado, conferimos a senha
     const passwordOk = await bcrypt.compare(req.body.password, user.password)
 
-    // Senha errada, retorna,
+    // Senha errada, retorna
     // HTTP 401: Unauthorized
     if(! passwordOk) return res.send(401).end()
 
-    console.log({a: req.body.password})
+    // Usuário e senha OK, passamos ao procedimento de gerar o token
 
-    // Usuário e senha Ok, passamos ao procedimento de gerar o token
-
-    // Excluímos o campo "password" do usuário, para que ele não seja incluído no token
+    // Excluímos o campo "password" do usuário, para que ele não
+    // seja incluído no token
     if(user.password) delete user.password
 
-    // Geração do Token
+    // Geração do token
     const token = jwt.sign(
       user,                       // Dados do usuário
       process.env.TOKEN_SECRET,   // Senha para criptografar o token
-      { expiresIn: '24h'}        // Prazo de validade do token
+      { expiresIn: '24h' }        // Prazo de validade do token
     )
 
-    // Retorna HTTP 200: Ok com o token
-    res.send({token})
+    // Retorna HTTP 200: OK com o token e o usuário autenticado
+    res.send({token, user})
 
   }
   catch(error) {
     console.log(error)
 
-    //HTTP 500: Internal Server Error
-    res.status(500).end()    
+    // HTTP 500: Internal Server Error
+    res.status(500).end()
   }
+}
+
+controller.me = function(req, res) {
+  // Retorna as informações do usuário logado que foram
+  // armazendas em req.authUser em src/middleware/auth.js
+  
+  // HTTP: OK (implícito)
+  res.send(req.authUser)
 }
 
 export default controller

@@ -1,14 +1,25 @@
 import React from 'react'
-import { Router, Route, Routes } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 
 import HomePage from '../pages/HomePage'
-import LoginPage from '../pages/LoginPage'  
+import LoginPage from '../pages/LoginPage'
 
-export default function AppRoutes (){
-    return(
-        <Routes>
-            <Route path='/' element={ <HomePage/> } />
-            <Route path='/login' element={ <LoginPage/> } />
-        </Routes>
-    )
+import CustomerList from '../pages/customer/CustomerList'
+
+/*
+  AuthRoute verifica se o usuário ainda está autenticado
+  quando há uma mundança de rota no front-end
+*/
+import AuthRoute from './AuthRoute'
+
+export default function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={ <AuthRoute><HomePage /></AuthRoute> } />
+      <Route path="/login" element={ <LoginPage /> } />
+
+      <Route path="/customers" element={ <AuthRoute> <CustomerList/></AuthRoute>} />
+
+    </Routes>
+  )
 }
