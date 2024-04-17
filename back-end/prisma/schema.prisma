@@ -46,3 +46,13 @@ model Customer {
   phone             String      // Telefone
   email             String      // Email
 }
+
+model Seller {
+  id                Int         @id @default(autoincrement())
+  fullname          String      // Nome completo 
+  birth_date        DateTime?   // Data de aniversário
+  ident_document    String      @unique // Documento de identidade
+  email             String      @unique //Email
+  phone             String      // Celular
+  is_manager        Boolean     @default(false)  // Gerente?
+}

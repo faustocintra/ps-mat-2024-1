@@ -4,9 +4,27 @@ import Button from '@mui/material/Button'
 import AuthUserContext from "../contexts/AuthUserContext";
 import { Link } from 'react-router-dom'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { useNavigate } from "react-router-dom";
 
 export default function AuthControl() {
-  const { authUser } = React.useContext(AuthUserContext)
+  const { authUser, setAuthUser } = React.useContext(AuthUserContext)
+
+  const navigate = useNavigate()
+
+  function handleLogoutButtonClick(){
+    if(window.confirm('Deseja realmente sair?')){
+
+      // Apaga o token de autenticação do localStorage
+      window.localStorage.removeItem(import.meta.env.VITE_AUTH_TOKEN_NAME)
+
+      // Apaga as informações em memória do usuário autenticado
+      setAuthUser(null)
+
+      // Redireciona para a página inicial.
+      navigate('/login')
+    }
+    
+  }
 
   if(authUser) {
     return (
@@ -15,7 +33,16 @@ export default function AuthControl() {
         <Typography variant="caption">
           {authUser.fullname}
         </Typography>
-        <Button color="secondary">Sair</Button>
+        <Button 
+        color="secondary"
+        onClick={handleLogoutButtonClick}
+        size="small"
+        sx={{
+          ml: 0.75, // ml: marginLeft
+        }}
+        >
+          Sair
+        </Button>
       </>
     )
   }
