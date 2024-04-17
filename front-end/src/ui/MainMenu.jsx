@@ -41,14 +41,14 @@ export default function MainMenu() {
       >
         <MenuItem 
         onClick={handleClose}
-        component={Link} to = "/">
+        component={Link} to = "/" divider>
           Pagina Inicial 
         </MenuItem>
 
         <MenuItem 
         onClick={handleClose}
-        component={Link} to = "/login">
-          Entrar
+        component={Link} to = "/customers">
+          Clientes
         </MenuItem>
       </Menu>
     </div>
