@@ -46,3 +46,13 @@ model customer {
   phone                String
   email                String 
 }
+
+model seller {
+  id                    Int                 @id @default(autoincrement())
+  fullname              String              //Nome Completo
+  birth_date            DateTime            // Data de nascimento
+  identity_document     String              @unique //CPF
+  email                 String              @unique
+  phone                 String              // Celular
+  is_manager            Boolean             @default(false)        
+}
