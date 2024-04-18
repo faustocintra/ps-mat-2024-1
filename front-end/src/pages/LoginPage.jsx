@@ -66,7 +66,7 @@ export default function LoginPage() {
       // Armazena as informações do usuário autenticado no contexto
       // AuthUserContext
       setAuthUser(response.user)
-      
+
       // Mostra notificação de sucesso
       setState({...state,
         showWaiting: false,
