@@ -7,6 +7,11 @@ export default function(req, res, next) {
     acessadas sem necessidade de verificação do
     token
   */
+ 
+  /*const bypassRoutes = [
+    { url: '/users', method: 'POST' }
+  ]*/
+
   const bypassRoutes = [
     { url: '/users/login', method: 'POST' }
   ]
@@ -39,6 +44,7 @@ export default function(req, res, next) {
 
   // Extrai o token de dentro do cabeçalho 'authentication'
   const authHeaderParts = authHeader.split(' ')
+  
   // O token corresponde à segunda parte do cabeçalho
   const token = authHeaderParts[1]
 

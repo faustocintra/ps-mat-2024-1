@@ -40,3 +40,7 @@ npm install @fontsource/roboto
 # Istalação do data-grid
 
 npm install @mui/x-data-grid
+
+npm install react-input-mask
+npm install @mui/x-date-pickers 
+npm install date-fns
