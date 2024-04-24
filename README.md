@@ -58,5 +58,9 @@ npm install @fontsource/roboto
 npm install @mui/icons-material
 npm install @mui/x-data-grid
 
+npm install react-input-mask
+npm install @mui/x-date-pickers
+npm install date-fns
+
 # Instalação de CORS no back-end
 npm install cors
