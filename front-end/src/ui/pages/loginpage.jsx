@@ -6,7 +6,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Notification from "../Notification";
 import {useNavigate} from 'react-router-dom'
 import Waiting from "../waiting";
-import AuthUSerContext from "../../Contexts/AuthUserContext";
+import AuthUserContext from "../../Contexts/AuthUserContext";
 
 import myfetch from "../../lib/myfetch";
 
@@ -31,7 +31,7 @@ export default function LoginPage() {
         notif
 
     } = state
-    const {setAuthUser} = React.useContext(AuthUSerContext)
+    const {setAuthUser} = React.useContext(AuthUserContext)
     const navigate = useNavigate()
     const handleClickShowPassword = () => setState({ ...state, showPassword: !showPassword});
 
