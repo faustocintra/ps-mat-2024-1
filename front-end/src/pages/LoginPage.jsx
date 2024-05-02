@@ -35,7 +35,7 @@ export default function LoginPage() {
     notif
   } = state
 
-  const { setAuthUser } = React.useContext(AuthUserContext) 
+  const { setAuthUser } = React.useContext(AuthUserContext)
 
   const navigate = useNavigate()
 
@@ -63,7 +63,8 @@ export default function LoginPage() {
       // Armazena o token no localStorage (INSEGURO!! ISSO É PROVISÓRIO!!)
       window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
 
-      //Armazena as informações do usuário autenticado no contexto
+      // Armazena as informações do usuário autenticado no contexto
+      // AuthUserContext
       setAuthUser(response.user)
 
       // Mostra notificação de sucesso
@@ -179,5 +180,5 @@ export default function LoginPage() {
         
       </Paper>
     </>
-    )
+  )
 }

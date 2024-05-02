@@ -39,15 +39,13 @@ export default function MainMenu() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose} component={Link} to='/'>
+        <MenuItem onClick={handleClose} component={Link} to="/" divider>
           Página inicial
         </MenuItem>
 
-        <MenuItem onClick={handleClose} component={Link} to='/login'>
-          Entrar
+        <MenuItem onClick={handleClose} component={Link} to="/customers">
+          Clientes
         </MenuItem>
-
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
       </Menu>
     </div>
   );
