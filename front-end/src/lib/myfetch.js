@@ -53,7 +53,7 @@ class HttpError extends Error {
         return `ERRO: HTTP ${response.status}: ${response.statusText}`
  
     }
-  }
+  } 
  
   myfetch.post = async function(path, body) {
     const response = await fetch(baseUrl + path, getOptions(body, 'POST'))
