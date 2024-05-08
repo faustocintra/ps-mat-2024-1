@@ -11,6 +11,7 @@ import myfetch from '../lib/myfetch'
 import Notification from '../ui/Notification'
 import { useNavigate } from 'react-router-dom'
 import Waiting from '../ui/Waiting'
+import AuthUserContext from '../contexts/AuthUserContext'
 
 export default function LoginPage() {
 
@@ -34,8 +35,9 @@ export default function LoginPage() {
     notif
   } = state
 
-  const navigate = useNavigate()
+  const { setAuthUser } = React.useContext(AuthUserContext)
 
+  const navigate = useNavigate()
 
   const handleClickShowPassword = () => setState({...state, showPassword: !showPassword})
 
@@ -47,61 +49,68 @@ export default function LoginPage() {
     setState({...state, [event.target.name]: event.target.value})
   }
 
-  async function handleSubmit(event){
-    event.preventDefault()  // Evita que a página seja recarregada
+  async function handleSubmit(event) {
+    event.preventDefault()    // Evita que a página seja recarregada
 
     try {
 
-        // Exibe o backdrop de espera
-        setState({...state, showWaiting: true})
+      // Exibe o backdrop de espera
+      setState({...state, showWaiting: true})
 
-        const response = await myfetch.post('/users/login', {email, password})
-        //console.log(response)
+      const response = await myfetch.post('/users/login', {email, password})
+      //console.log(response)
 
-        // Armazena o token no localStorage(Inseguro - apenas para testes)
-        window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
+      // Armazena o token no localStorage (INSEGURO!! ISSO É PROVISÓRIO!!)
+      window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
 
-        // Mostrar notificação de sucesso
-        setState({...state, 
-          showWaiting: false,
-          notif:{
-            show: true,
-            message: 'Autenticação efetuada com sucesso',
-            severity: 'success',
-            timeout: 1000
-        }})
-    } catch (error) {
-        console.log(error)
+      // Armazena as informações do usuário autenticado no contexto
+      // AuthUserContext
+      setAuthUser(response.user)
 
-        // Mostrar notificações de erro
+      // Mostra notificação de sucesso
+      setState({...state,
+        showWaiting: false,
+        notif: {
+          show: true,
+          message: 'Autenticação efetuada com sucesso.',
+          severity: 'success',
+          timeout: 1500
+      }})
+      
+    }
+    catch(error) {
+      console.error(error)
 
-        setState({...state, notif:{
+      // Mostra notificação de erro
+      setState({...state,
+        showWaiting: false,
+        notif: {
           show: true,
           message: error.message,
           severity: 'error',
           timeout: 4000
       }})
-
     }
-}
+  }
 
-function handleNotificationClose(event, reason) {
-  const status = notif.severity
+  function handleNotificationClose() {
+    const status = notif.severity
 
-  // Fecha a barra de notificação
-  setState({...state, notif:{
-    show: false,
-    severity: status,
-    message: '',
-    timeout: 1500
-  }})
+    // Fecha a barra de notificação
+    setState({...state, notif: {
+      show: false,
+      severity: status,
+      message: '',
+      timeout: 1500
+    }})
 
-  if(status === 'success') navigate('/')
-}
+    // Vai para a página inicial, caso o login tenha sido feito com sucesso
+    if(status === 'success') navigate('/')
+  }
 
   return (
     <>
-
+      
       <Waiting show={showWaiting} />
 
       <Notification
@@ -168,6 +177,7 @@ function handleNotificationClose(event, reason) {
             Enviar
           </Button>
         </form>
+        
       </Paper>
     </>
   )

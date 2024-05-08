@@ -3,13 +3,13 @@ import prisma from '../database/client.js'
 
 const controller = {}   // Objeto vazio
 
-// Criando um novo cliente
+// Criando um novo vendedor
 controller.create = async function (req, res) {
   try {
-    await prisma.customer.create({ data: req.body })
+    await prisma.seller.create({ data: req.body })
 
     // HTTP 201: Created
-    res.status(201).send({ message: 'Created'}).end()
+    res.status(201).end()
   }
   catch(error) {
     console.log(error)
@@ -19,9 +19,10 @@ controller.create = async function (req, res) {
   }
 }
 
+// Retorna todos os vendedores 
 controller.retrieveAll = async function (req, res) {
   try {
-    const result = await prisma.customer.findMany()
+    const result = await prisma.seller.findMany()
 
     // HTTP 200: OK (implícito)
     res.send(result)
@@ -35,9 +36,10 @@ controller.retrieveAll = async function (req, res) {
   }
 }
 
+// Retorna um vendedor específico
 controller.retrieveOne = async function(req, res) {
   try {
-    const result = await prisma.customer.findUnique({
+    const result = await prisma.seller.findUnique({
       where: { id: Number(req.params.id) }
     })
 
@@ -54,9 +56,10 @@ controller.retrieveOne = async function(req, res) {
   }
 }
 
+// Atualiza um vendedor
 controller.update = async function(req, res) {
   try {
-    const result = await prisma.customer.update({
+    const result = await prisma.seller.update({
       where: { id: Number(req.params.id) },
       data: req.body
     })
@@ -74,9 +77,10 @@ controller.update = async function(req, res) {
   }
 }
 
+// Exclui um vendedor
 controller.delete = async function (req, res) {
   try {
-    const result = await prisma.customer.delete({
+    const result = await prisma.seller.delete({
       where: { id: Number(req.params.id) }
     })
 
