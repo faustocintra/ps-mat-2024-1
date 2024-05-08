@@ -35,7 +35,7 @@ function getOptions(body = null, method = 'GET') {
 
   if(token) options.headers.authorization = `Bearer ${token}`
 
-  return options
+  return options 
 }
 
 function getErrorDescription(response) {
