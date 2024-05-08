@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles'
 import { yellow, pink } from '@mui/material/colors'
+import { ptBR as ptrBR_datagrid} from '@mui/x-data-grid/locales'
+import { ptBR as ptBR_datePicker} from '@mui/x-date-pickers/locales'
 
 const theme = createTheme({
   palette: {
@@ -17,6 +19,6 @@ const theme = createTheme({
       fontWeight: 'bold'
     }
   }
-})
+}, ptrBR_datagrid, ptBR_datePicker)
 
 export default theme

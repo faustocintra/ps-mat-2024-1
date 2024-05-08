@@ -24,7 +24,7 @@ export default function(req, res, next) {
     }
   }
 
-  /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTENTICAÇÃO */
+ /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTENTICAÇÃO */
 
   // O token é enviado por meio do cabeçalho 'authorization'
   const authHeader = req.headers['authorization']
@@ -37,6 +37,7 @@ export default function(req, res, next) {
     return res.status(403).end()
   }
 
+  // Extrai o token de dentro do cabeçalho 'authentication'
   // Extrai o token de dentro do cabeçalho 'authentication'
   const authHeaderParts = authHeader.split(' ')
   // O token corresponde à segunda parte do cabeçalho

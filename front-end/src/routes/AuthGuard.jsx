@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import myfetch from '../lib/myfetch'
 import AuthUserContext from '../contexts/AuthUserContext'
 
-export default function AuthRoute({ children }) {
+export default function AuthGuard({ children }) {
 
   async function checkAuthUser() {
     try {

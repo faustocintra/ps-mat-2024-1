@@ -29,6 +29,9 @@ app.use("/", indexRouter);
 /*****************************************************
 * ROTAS DA API
 *****************************************************/
+// Middleware que protege as rotas com autenticação
+import auth from './middleware/auth.js'
+app.use(auth)
 
 import carRoute from './routes/car.js'
 app.use('/cars', carRoute)
