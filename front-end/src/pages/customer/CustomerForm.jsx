@@ -37,7 +37,6 @@ export default function CustomerForm() {
             variant="filled"
             required
             fullWidth
-            autoFocus
             value={customer.name}
             onChange={handleFieldChange}
           />
