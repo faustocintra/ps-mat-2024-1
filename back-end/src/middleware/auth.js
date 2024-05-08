@@ -9,6 +9,7 @@ export default function(req, res, next) {
   */
   const bypassRoutes = [
     { url: '/users/login', method: 'POST' }
+  
   ]
 
   /* 
