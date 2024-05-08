@@ -27,7 +27,7 @@ de editar e excluir dessa linha ficam visíveis*/
  
 .form-fields .MuiFormControl-root{
   min-width: 250px;
-  max-width: 500;
-  width: 500px;
+  max-width: 600;
+  width: 600px;
   margin-bottom: 36px;
 }

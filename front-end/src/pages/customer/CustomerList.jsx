@@ -162,20 +162,20 @@ export default function CustomerList() {
       </Box>
  
       <Paper elevation={10}>
-      <Box sx={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={customers}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
-        pageSizeOptions={[5]}
-      />
-      </Box>
+        <Box sx={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={customers}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
+              },
+            }}
+            pageSizeOptions={[5]}
+          />
+        </Box>
     </Paper>
     </>
   )
