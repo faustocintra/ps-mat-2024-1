@@ -14,6 +14,8 @@ import useConfirmDialog from '../../ui/useConfirmDialog'
 import useNotification from '../../ui/useNotification'
 import useWaiting from '../../ui/useWaiting'
 import myfetch from '../../lib/myfetch'
+import Customer from '../../models/Customer'
+import { ZodError } from 'zod'
 
 export default function CustomerForm() {
 
@@ -38,11 +40,13 @@ export default function CustomerForm() {
 
   const [state, setState] = React.useState({
     customer: { ...formDefaults },
-    formModified: false
+    formModified: false,
+    inputErrors: {}
   })
   const {
     customer,
-    formModified
+    formModified,
+    inputErrors
   } = state
 
   const params = useParams()
@@ -78,6 +82,9 @@ export default function CustomerForm() {
     event.preventDefault()      // Evita que a página seja recarregada
     showWaiting(true)       // Exibe a tela de espera
     try {
+      // Invoca a validação dos dados da biblioteca Zod por meio do model Customer
+      Customer.parse(customer)
+
       // Se houver parâmetro na rota, significa que estamos modificando
       // um cliente já existente. A requisição será enviada ao back-end
       // usando o método PUT
@@ -95,6 +102,19 @@ export default function CustomerForm() {
     catch(error) {
       console.error(error)
       notify(error.message, 'error')
+
+      if(error instanceof ZodError) {
+        // Formamos um objeto contendo os erros do Zod e os colocamos na variável de estado inputErrors
+        const messages = {}
+        for(let i of error.issues) messages[i.path[0]] = i.message
+        setState({ ...state, inputErrors: messages })
+        notify('Há campos com valores inválidos no formulário', 'error')
+      }
+      else {
+        console.error(error)
+        // Deu errado, exibimos o erro e permanecemos na página do formulário
+        notify(error.message, 'error')
+      }
     }
     finally {
       // Desliga a tela de espera, seja em caso de sucesso, seja em caso de erro
@@ -162,6 +182,8 @@ export default function CustomerForm() {
             fullWidth
             value={customer.name}
             onChange={handleFieldChange}
+            error={inputErrors?.name}
+            helperText={inputErrors?.name}
           />
 
           <InputMask
@@ -175,6 +197,8 @@ export default function CustomerForm() {
                 variant="filled"
                 required
                 fullWidth
+                error={inputErrors?.ident_document}
+                helperText={inputErrors?.ident_document} 
               /> 
             }
           </InputMask>
@@ -189,7 +213,9 @@ export default function CustomerForm() {
               slotProps={{
                 textField: {
                   variant: 'filled',
-                  fullWidth: true
+                  fullWidth: true,
+                  error: inputErrors?.birth_date,
+                  helperText: inputErrors?.birth_date  
                 }
               }}
             />
@@ -204,6 +230,8 @@ export default function CustomerForm() {
             fullWidth
             value={customer.street_name}
             onChange={handleFieldChange}
+            error={inputErrors?.street_name}
+            helperText={inputErrors?.street_name}   
           />   
 
           <TextField 
@@ -214,6 +242,8 @@ export default function CustomerForm() {
             fullWidth
             value={customer.house_number}
             onChange={handleFieldChange}
+            error={inputErrors?.house_number}
+            helperText={inputErrors?.house_number} 
           />  
 
           <TextField 
@@ -224,6 +254,8 @@ export default function CustomerForm() {
             fullWidth
             value={customer.complements}
             onChange={handleFieldChange}
+            error={inputErrors?.complements}
+            helperText={inputErrors?.complements}  
           />
 
           <TextField 
@@ -234,6 +266,8 @@ export default function CustomerForm() {
             fullWidth
             value={customer.municipality}
             onChange={handleFieldChange}
+            error={inputErrors?.municipality}
+            helperText={inputErrors?.municipality}
           />
 
           <TextField
@@ -245,6 +279,8 @@ export default function CustomerForm() {
             value={customer.state}
             onChange={handleFieldChange}
             select
+            error={inputErrors?.state}
+            helperText={inputErrors?.state}  
           >
             {
               states.map(s => 
@@ -268,6 +304,8 @@ export default function CustomerForm() {
                 variant="filled"
                 required
                 fullWidth
+                error={inputErrors?.phone}
+                helperText={inputErrors?.phone}  
               /> 
             }
           </InputMask>
@@ -280,6 +318,8 @@ export default function CustomerForm() {
             fullWidth
             value={customer.email}
             onChange={handleFieldChange}
+            error={inputErrors?.email}
+            helperText={inputErrors?.email}   
           />  
 
           <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
@@ -299,7 +339,7 @@ export default function CustomerForm() {
           </Box> 
 
           <Box sx={{ fontFamily: 'monospace', display: 'flex', width: '100%' }}>
-            {JSON.stringify(customer)}
+            {JSON.stringify(inputErrors)}
           </Box>
 
         </form>

@@ -23,6 +23,7 @@ export default function AppRoutes() {
       <Route path="/customers" element={ <AuthGuard> <CustomerList /> </AuthGuard>} />
       <Route path="/customers/new" element={ <AuthGuard> <CustomerForm /> </AuthGuard>} />
       <Route path="/customers/:id" element={ <AuthGuard> <CustomerForm /> </AuthGuard>} />
+
     </Routes>
   )
 }
