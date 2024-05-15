@@ -10,7 +10,7 @@ controller.create = async function (req, res) {
 
     // HTTP 201: Created
     //res.status(201).end()
-    res.status(201).send({ message: 'Created'}).end()
+    res.status(201).end()
   }
   catch(error) {
     console.log(error)
@@ -22,7 +22,9 @@ controller.create = async function (req, res) {
 
 controller.retrieveAll = async function (req, res) {
   try {
-    const result = await prisma.customer.findMany()
+    const result = await prisma.customer.findMany({
+      orderBy: { name: 'asc' }
+    })
 
     // HTTP 200: OK (implícito)
     res.send(result)
