@@ -15,6 +15,10 @@ import useNotification from "../../useNotification";
 import useWaiting from "../../useWaiting";
 import myfetch from "../../../lib/myfetch";
 
+import Customer from "../../../models/Customer";
+import { ZodError } from 'zod'
+
+
 
 
 export default function CustomerForm() {
@@ -23,7 +27,7 @@ export default function CustomerForm() {
     valor inicial uma string vazia. a excessão e o campo birth_date
     que devido ao funcionamento do DatePicker, deve iniciar a variavel null */
 
-    const formDefauts ={
+    const formDefauts = {
         name: '',
         ident_document: '',
         birth_date: null,
@@ -41,12 +45,14 @@ export default function CustomerForm() {
     }
 
     const [state, setState] = React.useState({
-        customer: {...formDefauts},
-        formModified: false
+        customer: { ...formDefauts },
+        formModified: false,
+        inputErrors: {}
     })
     const {
         customer,
-        formModified
+        formModified,
+        inputErrors
     } = state
 
 
@@ -103,6 +109,9 @@ export default function CustomerForm() {
         e.preventDefault()  //evita q a pagina seja recarrecagada
         showWaiting(true)    //exibe Backdrop de espera
         try {
+            // Invoca o capiroto Zod para validar os dados por meio do model Customer
+            Customer.parse(customer)
+
             if (params.id) await myfetch.put(`/customers/${params.id}`, customer)
             else await myfetch.post(`/customers`, customer)
 
@@ -112,6 +121,16 @@ export default function CustomerForm() {
         }
         catch (error) {
             console.error(error)
+
+            if (error instanceof ZodError) {
+                //Faremeos um objeto contendo os erros do Zod e
+                //o colocamos na variavel de estado inpoutErrors
+                const messages = {}
+                for (let i of error.issues) messages[i.path[0]] = i.message
+                setState({ ...state, inputErrors: messages })
+                notify('Ha campos com valores invalidos no formulario', 'error')
+            }
+
             notify(error.message, 'error')
         }
         finally {
@@ -120,41 +139,41 @@ export default function CustomerForm() {
         }
     }
 
-        React.useEffect(() => {
-            if (params.id) loadData()
-        })
+    React.useEffect(() => {
+        if (params.id) loadData()
+    })
 
-        async function loadData() {
-            showWaiting(true)
-            try {
-                const result = await myfetch.get(`/customers/${params.id}`)
-                //converte o formato de data de nascimento no banco de dados
-                //para o formato reconhecido pelo componente DatePicker
+    async function loadData() {
+        showWaiting(true)
+        try {
+            const result = await myfetch.get(`/customers/${params.id}`)
+            //converte o formato de data de nascimento no banco de dados
+            //para o formato reconhecido pelo componente DatePicker
 
-                result.birth_date = parseISO(result.birth_date)
+            result.birth_date = parseISO(result.birth_date)
 
-                setState({...state, customer: result})
-            }
-            catch (error) {
-                console.error(error)
-                notify(error.message, 'error')
-
-
-            }
-            finally {
-                //desliga backdrop
-                showWaiting(false)
-            }
+            setState({ ...state, customer: result })
         }
+        catch (error) {
+            console.error(error)
+            notify(error.message, 'error')
 
-        async function handleBackButtonClick() {
-            if(formModified &&
-                ! await askForConfirmation("Há informações nao salvas deseja realmente sair?")
-                ) return //sai da funçaõ sem fazer nada
 
-                navigate('..',{relative: 'path', replace: true})
         }
-    
+        finally {
+            //desliga backdrop
+            showWaiting(false)
+        }
+    }
+
+    async function handleBackButtonClick() {
+        if (formModified &&
+            ! await askForConfirmation("Há informações nao salvas deseja realmente sair?")
+        ) return //sai da funçaõ sem fazer nada
+
+        navigate('..', { relative: 'path', replace: true })
+    }
+
 
     return (
         <>
@@ -179,6 +198,8 @@ export default function CustomerForm() {
                         autoFocus
                         value={customer.name}
                         onChange={handleFieldChange}
+                        helperText={inputErrors?.name}
+                        error={inputErrors?.name}
                     />
 
 
@@ -194,7 +215,9 @@ export default function CustomerForm() {
                             label="CPF"
                             variant="filled"
                             required
-                            fullWidthW
+                            fullWidth
+                            helperText={inputErrors?.ident_document}
+                            error={inputErrors?.ident_document}
                         />
                         }
 
@@ -211,7 +234,9 @@ export default function CustomerForm() {
                             slotProps={{
                                 TextField: {
                                     variant: 'filled',
-                                    fullWidth: true
+                                    fullWidth: true,
+                                    helperText: inputErrors?.birth_date,
+                                    error: inputErrors?.birth_date
                                 }
                             }
                             }
@@ -227,6 +252,8 @@ export default function CustomerForm() {
                         fullWidth
                         value={customer.street_name}
                         onChange={handleFieldChange}
+                        helperText={inputErrors?.street_name}
+                        error={inputErrors?.street_name}
                     />
 
                     <TextField
@@ -237,6 +264,8 @@ export default function CustomerForm() {
                         fullWidth
                         value={customer.house_number}
                         onChange={handleFieldChange}
+                        helperText={inputErrors?.house_number}
+                        error={inputErrors?.house_number}
                     />
 
                     <TextField
@@ -247,6 +276,8 @@ export default function CustomerForm() {
                         fullWidth
                         value={customer.complements}
                         onChange={handleFieldChange}
+                        helperText={inputErrors?.complements}
+                        error={inputErrors?.complements}
                     />
 
                     <TextField
@@ -257,6 +288,8 @@ export default function CustomerForm() {
                         fullWidth
                         value={customer.municipality}
                         onChange={handleFieldChange}
+                        helperText={inputErrors?.municipality}
+                        error={inputErrors?.municipality}
                     />
 
                     <TextField
@@ -267,6 +300,8 @@ export default function CustomerForm() {
                         fullWidth
                         value={customer.state}
                         onChange={handleFieldChange}
+                        helperText={inputErrors?.UF}
+                        error={inputErrors?.UF}
                         select
                     >
                         {
@@ -292,6 +327,8 @@ export default function CustomerForm() {
                             variant="filled"
                             required
                             fullWidth
+                            helperText={inputErrors?.phone}
+                            error={inputErrors?.phone}
                         />
                         }
 
@@ -306,6 +343,8 @@ export default function CustomerForm() {
                         fullWidth
                         value={customer.email}
                         onChange={handleFieldChange}
+                        helperText={inputErrors?.email}
+                        error={inputErrors?.email}
                     />
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
@@ -331,10 +370,10 @@ export default function CustomerForm() {
 
                     </Box>
 
-                    <Box
+                    {/* <Box
                         sx={{ fontFamily: 'monospace', display: 'flex', width: '100%' }}>
-                        {JSON.stringify(customer)}
-                    </Box>
+                        {JSON.stringify(inputErrors)}
+                    </Box> */}
 
 
 

@@ -151,8 +151,21 @@ controller.login = async function (req, res) {
             { expiresIn: '24h' }  //praso de validade do token
         )
 
+        // Faremos o cookie para enviar ao front-end
+        res.cookie(process.env.AUTH_COOKIE_NAME, token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None',
+            path :'/',
+            maxAge: 24 * 60 *60 * 1000 //24h
+
+        })
+
         //retorna HTTP 200: ok
-        res.send({ token, user })
+        res.send({ user })
+
+        //retorna no Content
+        res.status(204).end()
 
 
     }
@@ -166,7 +179,18 @@ controller.login = async function (req, res) {
     }
 
 }
+controller.logout = function(req, res){
+    //limpa o conteudo do cookie que contem o token de autenticação
+    res.cookie(process.env.AUTH_COOKIE_NAME, '', {
+        httpOnly: true,  //O cookie ficara inacessivel para o JS no front-end
+        secure: true,
+        sameSite: 'None',
+        path :'/',
+        maxAge: 10// o cookie espira em 10ms
 
+    })
+    res.status(204).end()
+}
 controller.me = function(req, res) {
     //retorna as informações do usuario logado que foram armazenadas
     //em req.authUser em src/middleware/auth.js
