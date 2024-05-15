@@ -1,25 +1,27 @@
 import React from 'react'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
-import myfetch from '../../lib/myfetch';
-import Waiting from '../../ui/Waiting';
-import IconButton from '@mui/material/IconButton';
+import { DataGrid } from '@mui/x-data-grid'
+import myfetch from '../../lib/myfetch'
+import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
 import { Link } from 'react-router-dom'
-import AddBoxIcon from '@mui/icons-material/AddBox'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import useConfirmDialog from '../../ui/useConfirmDialog';
+import useNotification from '../../ui/useNotification';
+import useWaiting from '../../ui/useWaiting';
+ 
 export default function CustomerList() {
-
+ 
   const columns = [
-    { 
-      field: 'id', 
-      headerName: 'Cód', 
+    {
+      field: 'id',
+      headerName: 'Cód.',
       type: 'number',
-      width: 80 
+      width: 80
     },
     {
       field: 'fullname',
@@ -77,107 +79,109 @@ export default function CustomerList() {
       )
     }
   ];
-
+ 
   const [state, setState] = React.useState({
     customers: [],
-    showWaiting: false
   })
   const {
     customers,
-    showWaiting
   } = state
-
+ 
+  const { askForConfirmation, ConfirmDialog } = useConfirmDialog()
+  const { notify, Notification } = useNotification()
+  const { showWaiting, Waiting } = useWaiting()
+ 
   /*
-    useEffect() com vetor de dependencias vazio irá ser executado apenas uma vez,
-    durante o carregamento inicial do componente
+    useEffect() com vetor de dependências vazio irá ser executado
+    apenas uma vez, durante o carregamento inicial do componente
   */
- React.useEffect(() => {
-  fetchData()
- }, [])
-
- async function fetchData(){
-  setState({ ...state, showWaiting: true })
-  try{
-    const result = await myfetch.get('/customers')
-    console.log(result)
-    setState({
-      ...state,
-      customers: result,
-      showWaiting: false
-    })
-  }
-  catch(error){
-    console.log(error)
-    setState({
-      ...state,
-      showWaiting: false
-    })
-  }
- }
-
- async function handleDeleteButtonClick(deleteId){
-  if(confirm('Deseja realmente excluir este item?')) {
-    // Exibe a tela de espera
+  React.useEffect(() => {
+    fetchData()
+  }, [])
+ 
+  async function fetchData() {
     setState({ ...state, showWaiting: true })
-    try{
-      await myfetch.delete(`/customers/${deleteId}`)
-
-      // Recarrega os dados da grid
-      fetchData()
-
-      alert('Item excluído com sucesso')
-
-      // Esconde a tela de espera 
-      setState({ ...state, showWaiting: false })
+    try {
+      const result = await myfetch.get('/customers')
+      setState({
+        ...state,
+        customers: result,
+      })
     }
-    catch(error) {
-      alert(error.message)
-
-      // Esconde a tela de espera
-      setState({ ...state, showWaiting: false })
+    catch (error) {
+      console.error(error)
+      notify(error.message, 'error')
+    }
+    finally {
+      showWaiting(false)
     }
   }
- }
-
-  return(
+ 
+  async function handleDeleteButtonClick(deleteId) {
+    if (await askForConfirmation('Deseja realmente excluir este item?')) {
+      //Exibe a tela de espera
+      showWaiting(true)
+      try {
+        await myfetch.delete(`/customers/${deleteId}`)
+ 
+        //Reacarrega os dados da grid
+        fetchData()
+ 
+        notify('Item excluído com sucesso')
+      }
+      catch (error) {
+        console.log(error)
+        notify(error.message, 'error')
+      }
+      finally {
+        showWaiting(false)
+      }
+    }
+  }
+ 
+  return (
     <>
-    <Waiting show={showWaiting} />
-
+      <Waiting />
+      <Notification />
+      <ConfirmDialog />
+ 
       <Typography variant="h1" gutterBottom>
         Listagem de clientes
       </Typography>
-
-      <Box sx={{ 
+ 
+      <Box sx={{
         display: 'flex',
         justifyContent: 'right',
-        mb: 2 // marginBottom
+        mb: 2 //marginButton
       }}>
         <Link to="./new">
           <Button
             variant="contained"
             size="large"
             color="secondary"
-            startIcon={<AddBoxIcon/>}
+            startIcon={<AddBoxIcon />}
           >
-            Novo cliente
+            Novo Cliente
           </Button>
         </Link>
       </Box>
-
-      <Box sx={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={customers}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
-        pageSizeOptions={[5]}
-      />
-    </Box>
+ 
+      <Paper elevation={10}>
+        <Box sx={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={customers}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
+              },
+            }}
+            pageSizeOptions={[5]}
+          />
+        </Box>
+      </Paper>
     </>
   )
 }

@@ -26,22 +26,38 @@ export default function(req, res, next) {
 
   /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTENTICAÇÃO */
 
-  // O token é enviado por meio do cabeçalho 'authorization'
-  const authHeader = req.headers['authorization']
+  let token = null
 
-  // O token não foi passado ~> HTTP 403: Forbidden
-  if(! authHeader) return res.status(403).end()
-  
-  // Extrai o token de dentro do cabeçalho 'authorization'
-  const authHeaderParts = authHeader.split(' ')
-  // O token corresponde à segunda parte do cabeçalho
-  const token = authHeaderParts[1]
+  //  1. PROCURA O TOKEN EM UM COOKIE
+  token = req.cookies[process.env.AUTH_COOKIE_NAME]
+
+  // 2. SE O TOKEN NÃO FOR ENCONTRADO NO COOKIE, PROCURA NO HEADER DE AUTORIZAÇÃO
+  if(!token ) {
+
+    // O token é enviado por meio do cabeçalho 'authorization'
+    const authHeader = req.headers['authorization']
+
+    // O token não foi passado ~> HTTP 403: Forbidden
+    if(! authHeader) {
+      console.error('ERRO: Acesso negado por falta de token')
+      return res.status(403).end()
+    }
+
+    // Extrai o token de dentro do cabeçalho 'authentication'
+    const authHeaderParts = authHeader.split(' ')
+
+    // O token corresponde à segunda parte do cabeçalho
+    const token = authHeaderParts[1]
+  }
 
   // Validando o token
   jwt.verify(token, process.env.TOKEN_SECRET, (error, user) => {
 
     // Token inválido ou expirado ~> HTTP 403: Forbidden
-    if(error) return res.status(403).end()
+    if(error) {
+      console.error('ERRO: Token inválido ou expirado')
+      return res.status(403).end()
+    }
 
     /*
       Se chegamos até aqui, o token está OK e temos as informações
@@ -54,5 +70,5 @@ export default function(req, res, next) {
     next()
 
   })
-  
+
 }
