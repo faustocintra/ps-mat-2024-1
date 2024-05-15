@@ -3,119 +3,79 @@ import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
-import Button from '@mui/material/Button'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import IconButton from '@mui/material/IconButton'
+import Button from '@mui/material/Button'
 import myfetch from '../lib/myfetch'
-import Notification from '../ui/Notification'
+import useNotification from '../ui/useNotification'
 import { useNavigate } from 'react-router-dom'
-import Waiting from '../ui/Waiting'
+import useWaiting from '../ui/useWaiting'
 import AuthUserContext from '../contexts/AuthUserContext'
 
 export default function LoginPage() {
 
-    const [state, setState] = React.useState({
-        showPassword: false,
-        email: '',
-        password: '',
-        showWaiting: false,
-        notif: {
-            show: false,
-            message: '',
-            severity: 'success',
-            timeout: 1500
-        }
-    })
+  const [state, setState] = React.useState({
+    showPassword: false,
+    email: '',
+    password: ''
+  })
+  const {
+    showPassword,
+    email,
+    password
+  } = state
 
-    const {
-        showPassword,
-        email,
-        password,
-        showWaiting,
-        notif
-    } = state
+  const { notify, Notification } = useNotification()
+  const { showWaiting, Waiting } = useWaiting()
 
-    const { setAuthUser } = React.useContext(AuthUserContext)
+  const { setAuthUser } = React.useContext(AuthUserContext)
 
-    const navigate = useNavigate()
+  const navigate = useNavigate()
 
-    const handleClickShowPassword = () => setState({...state, showPassword: !showPassword})
+  const handleClickShowPassword = () => setState({...state, showPassword: !showPassword})
 
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault()
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault()
+  }
+
+  function handleChange(event) {
+    setState({...state, [event.target.name]: event.target.value})
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault()    // Evita que a página seja recarregada
+    showWaiting(true)
+    try {
+
+      const response = await myfetch.post('/users/login', {email, password})
+      //console.log(response)
+
+      // Armazena o token no localStorage (INSEGURO!! ISSO É PROVISÓRIO!!)
+      window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
+
+      // Armazena as informações do usuário autenticado no contexto
+      // AuthUserContext
+      setAuthUser(response.user)
+
+      // Mostra notificação de sucesso
+      notify('Autenticação efetuada com sucesso.', 'success', 1500, () => navigate('/'))
+      
     }
-
-    function handleChange(event) {
-        setState({...state,[event.target.name]: event.target.value})
+    catch(error) {
+      console.error(error)
+      notify(error.message, 'error')
     }
-
-    async function handleSubmit(event) {
-        event.preventDefault() //evita que a página seja recarregada
-
-        try {
-            //Exibe o backdrop de espera
-            setState({...state, showWaiting: true})
-
-            const response = await myfetch.post('/users/login', {email, password})
-            //console.log(response)
-
-            //Armazena o token no localStorage (INSEGURO!! ISSO É PROVISÓRIO!!)
-            window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
-
-            //Armazena as informações do usuário autenticado no contexto AuthUserContext
-            setAuthUser(response.user)
-
-            //mostra notificação de sucesso
-            setState({...state, 
-                showWaiting: false,
-                notif: {
-                    show: true,
-                    message: 'Autenticação realizada com sucesso',
-                    severity: 'success',
-                    timeout: 1500
-            }})
-        }
-        catch(error) {
-            console.error(error)
-            //mostra notificação de erro
-            setState({...state, 
-                showWaiting: false,
-                notif: {
-                    show: true,
-                    message: error.message,
-                    severity: 'error',
-                    timeout: 4000
-            }})
-        }
+    finally {
+      showWaiting(false)
     }
+  }
 
-    function handleNotificationClose() {
-        const status = notif.severity
-
-        //fecha a barra de notificação
-        setState({...state, notif: {
-            show: false,
-            severity: status,
-            message: '',
-            timeout: 1500
-        }})
-
-        //Vai para a página inicial caso o login tenha sido feito com sucesso
-        if(status === 'success') navigate('/')
-    }
-
-    return (
+  return (
     <>
-      <Waiting show={showWaiting} />
-
-      <Notification
-        show={notif.show}
-        severity={notif.severity}
-        message={notif.message}
-        timeout={notif.timeout}
-        onClose={handleNotificationClose}
-      />
+      
+      <Waiting />
+      <Notification />
 
       <Typography variant="h1" sx={{ textAlign: 'center' }} gutterBottom>
         Autentique-se
@@ -130,48 +90,50 @@ export default function LoginPage() {
         }}
       >
         <form onSubmit={handleSubmit}>
-            <TextField 
-                name="email"
-                value={email}
-                onChange={handleChange}
-                label="E-mail" 
-                variant="filled" 
-                fullWidth 
-                sx={{ mb: '24px' }}
-            />
+          <TextField
+            name="email"
+            value={email}
+            onChange={handleChange}
+            label="E-mail" 
+            variant="filled" 
+            fullWidth
+            sx={{ mb: '24px' }} 
+          />
+          
+          <TextField
+            name="password"
+            value={password}
+            onChange={handleChange}
+            variant="filled"
+            type={showPassword ? 'text' : 'password'}
+            label="Senha"
+            fullWidth
+            sx={{ mb: '24px' }}
+            InputProps={{
+              endAdornment: 
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }}
+          />
 
-            <TextField
-                name="password"
-                value={password}
-                onChange={handleChange}
-                variant="filled"
-                type={showPassword ? 'text' : 'password'}
-                label="Senha"
-                fullWidth
-                sx={{ mb: '24px' }}
-                InputProps={{
-                endAdornment: 
-                    <InputAdornment position="end">
-                    <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                    >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                    </InputAdornment>
-                }}
-            />
-            <Button 
-                variant="contained" 
-                type="submit"
-                color="secondary"
-                fullWidth
-            >
-                Enviar
-            </Button>
+          <Button 
+            variant="contained" 
+            type="submit"
+            color="secondary"
+            fullWidth
+          >
+            Enviar
+          </Button>
         </form>
+        
       </Paper>
     </>
   )

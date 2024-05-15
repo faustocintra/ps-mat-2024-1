@@ -148,8 +148,20 @@ controller.login = async function (req, res) {
             { expiresIn: '24h' }        //Prazo de validade do token
         )
 
-        //Retorna HTTP 200: Ok com o token
-        res.send({token, user})
+        //Formamos o cookie para enviar ao front-end
+        res.cookie(process.env.AUTH_COOKIE_NAME, token, {
+            httpOnly: true, //O cookie fica inacessível para JS no front-end
+            secure: true,
+            sameSite: 'None',
+            path: '/',
+            maxAge: 24 * 60 * 60 * 1000 //24h
+        })
+
+        //Retorna HTTP 200: Ok com o token e o usuário autenticado
+        //res.send({token, user})
+
+        //HTTP 204: No content
+        res.send({ user }) //O token não é mais enviado na resposta de login
     }
     catch(error) {
         console.log(error)
@@ -157,6 +169,19 @@ controller.login = async function (req, res) {
         //HTTP 500: Internal Server Error
         res.status(500).end()
     }
+}
+
+controller.logout = function(req, res) {
+    // "Limpa" o conteúdo do cookie que contém o token de autenticação
+    res.cookie(process.env.AUTH_COOKIE_NAME, '', {
+        httpOnly: true, //O cookie fica inacessível para JS no front-end
+        secure: true,
+        sameSite: 'None',
+        path: '/',
+        maxAge: 10 //24h
+    })
+
+    res.status(204).end()
 }
 
 controller.me = function(req, res) {

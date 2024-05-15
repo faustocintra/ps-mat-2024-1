@@ -62,5 +62,8 @@ npm install react-input-mask
 npm install @mui/x-date-pickers
 npm install date-fns
 
+npm install zod
+npm install cpf-cnpj-validator
+
 # Instalação de CORS no back-end
 npm install cors
