@@ -41,6 +41,7 @@ export default function useNotification() {
         return
       }
       setState({...state, open: false})
+      
       if(typeof onClose === 'function') onClose(event, reason)
     }
 

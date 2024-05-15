@@ -7,6 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 export default function useConfirmDialog() {
+  
   const [state, setState] = React.useState({
     open: false,
     title: '',

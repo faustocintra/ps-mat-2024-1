@@ -9,7 +9,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function Notification({
     show = false, 
     message, 
-    severity = 'sucess',
+    severity = 'success',
     timeout = 4000,
     onClose
 }) {

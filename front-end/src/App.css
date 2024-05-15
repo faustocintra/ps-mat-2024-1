@@ -4,27 +4,6 @@ body {
 }
 
 /*
-Oculta por padrão os ícones de editar e excluir dos datagrids,
-para não causar distrações
-*/
-.MuiDataGrid-row button{
-  visibility:hidden;
-}
-
-/*
-Quando o mouse passar sob uma linha de datagrid, os botôes
-de editar e excluir dessa linha ficam visíveis
-*/
-.MuiDataGrid-row:hover button {
-  visibility:visible;
-}
-
-body {
-  padding: 0;
-  margin: 0;
-}
-
-/*
   Oculta por padrão os ícones de editar e excluir dos datagrids,
   para não causar distrações
 */

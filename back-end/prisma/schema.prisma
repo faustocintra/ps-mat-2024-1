@@ -48,11 +48,11 @@ model User {
 }
 
 model Seller {
-  id                  Int       @id @default(autoincrement())
-  fullname            String    
-  birth_date          DateTime?    
-  identify_document   String   @unique
-  email               String    
-  phone               String    
-  is_manager          Boolean  @default(false) 
+  id                  Int         @id @default(autoincrement())
+  fullname            String
+  birth_date          DateTime
+  identity_document   String      @unique
+  email               String      @unique
+  phone               String
+  is_manager          Boolean     @default(false)
 }
