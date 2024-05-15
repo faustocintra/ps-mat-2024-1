@@ -6,35 +6,28 @@ import InputAdornment from '@mui/material/InputAdornment'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import IconButton from '@mui/material/IconButton'
+import Button from '@mui/material/Button'
 import myfetch from '../lib/myfetch'
-import Notification from '../ui/Notification'
+import useNotification from '../ui/useNotification'
 import { useNavigate } from 'react-router-dom'
-import Waiting from '../ui/Waiting'
+import useWaiting from '../ui/useWaiting'
 import AuthUserContext from '../contexts/AuthUserContext'
-import { Button } from '@mui/material'
 
 export default function LoginPage() {
 
   const [state, setState] = React.useState({
     showPassword: false,
     email: '',
-    password: '',
-    showWaiting: false,
-    notif: {
-      show: false,
-      message: '',
-      severity: 'success',
-      timeout: 1500
-    }
+    password: ''
   })
-
   const {
     showPassword,
     email,
-    password,
-    showWaiting,
-    notif
+    password
   } = state
+
+  const { notify, Notification } = useNotification()
+  const { showWaiting, Waiting } = useWaiting()
 
   const { setAuthUser } = React.useContext(AuthUserContext)
 
@@ -51,77 +44,38 @@ export default function LoginPage() {
   }
 
   async function handleSubmit(event) {
-    event.preventDefault()  //Evita que a página seja recarregada
-
+    event.preventDefault()    // Evita que a página seja recarregada
+    showWaiting(true)
     try {
-
-      //Exibe o backdrop de espera
-      setState({...state, showWaiting: true})
 
       const response = await myfetch.post('/users/login', {email, password})
       //console.log(response)
 
-      //Armazena o token no localStorage (Inseguro!! Isso é provisório)
+      // Armazena o token no localStorage (INSEGURO!! ISSO É PROVISÓRIO!!)
       window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
 
-        // Armazena as informações do usuário autenticado no contexto
+      // Armazena as informações do usuário autenticado no contexto
       // AuthUserContext
       setAuthUser(response.user)
 
-
-      //TODO: dar feedback de login OK. Mostra notificação de sucesso
-      setState({...state, 
-        showWaiting: false,
-        notif: {
-        show: true,
-        message: 'Autenticação efetuada com sucesso.',
-        severity: 'success',
-        timeout: 1500
-      }})
-
+      // Mostra notificação de sucesso
+      notify('Autenticação efetuada com sucesso.', 'success', 1500, () => navigate('/'))
+      
     }
     catch(error) {
       console.error(error)
-      //Mostra notificação de erro
-      setState({...state, 
-        showWaiting: false,
-        notif: {
-        show: true,
-        message: error.message,
-        severity: 'error',
-        timeout: 4000
-      }})
+      notify(error.message, 'error')
     }
-
-  }
-
-  function handleNotificationClose() {
-    const status = notif.severity
-
-    //Fecha a barra de notificação
-    setState({...state, notif: {
-      show: false,
-      severity: status,
-      message: '',
-      timeout: 1500
-    }})
-
-    //Vai para a pagina inicial, caso o login tenha sido feito com sucesso
-    if(status === 'success') navigate('/')
+    finally {
+      showWaiting(false)
+    }
   }
 
   return (
     <>
-
-      <Waiting show={showWaiting} />
-
-      <Notification
-        show={notif.show}
-        severity={notif.severity}
-        message={notif.message}
-        timeout={notif.timeout}
-        onClose={handleNotificationClose}
-        />
+      
+      <Waiting />
+      <Notification />
 
       <Typography variant="h1" sx={{ textAlign: 'center' }} gutterBottom>
         Autentique-se
@@ -131,50 +85,55 @@ export default function LoginPage() {
         elevation={6}
         sx={{
           padding: '24px',
-          margin: 'auto',
-          maxWidth: '550px'
+          maxWidth: '500px',
+          margin: 'auto'
         }}
       >
-            <form onSubmit={handleSubmit}>
-            <TextField 
+        <form onSubmit={handleSubmit}>
+          <TextField
             name="email"
             value={email}
             onChange={handleChange}
             label="E-mail" 
             variant="filled" 
-            fullWidth 
-            sx={{ mb: '24px'}}
-            />
-            <TextField
-                name="password"
-                value={password}
-                onChange={handleChange}
-                variant="filled"
-                type={showPassword ? 'text' : 'password'}
-                label="Senha"
-                fullWidth
-                sx={{ mb: '24px'}}
-                InputProps={{
-                endAdornment: 
-                    <InputAdornment position="end">
-                    <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                    >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                    </InputAdornment>
-                }}
-            />
+            fullWidth
+            sx={{ mb: '24px' }} 
+          />
+          
+          <TextField
+            name="password"
+            value={password}
+            onChange={handleChange}
+            variant="filled"
+            type={showPassword ? 'text' : 'password'}
+            label="Senha"
+            fullWidth
+            sx={{ mb: '24px' }}
+            InputProps={{
+              endAdornment: 
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }}
+          />
 
-    <Button variant="contained" 
+          <Button 
+            variant="contained" 
             type="submit"
             color="secondary"
             fullWidth
-            >Enviar</Button>
+          >
+            Enviar
+          </Button>
         </form>
+        
       </Paper>
     </>
   )

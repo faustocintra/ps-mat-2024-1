@@ -3,24 +3,23 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import myfetch from '../../lib/myfetch'
-import Waiting from '../../ui/Waiting'
-import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import {Link} from 'react-router-dom';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { alignProperty } from '@mui/material/styles/cssUtils';
-
-
+import IconButton from '@mui/material/IconButton'
+import Paper from '@mui/material/Paper'
+import Button from '@mui/material/Button'
+import { Link } from 'react-router-dom'
+import AddBoxIcon from '@mui/icons-material/AddBox'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import useConfirmDialog from '../../ui/useConfirmDialog'
+import useNotification from '../../ui/useNotification'
+import useWaiting from '../../ui/useWaiting'
 
 export default function CustomerList() {
 
   const columns = [
     { 
       field: 'id', 
-      headerName: 'Cód.', 
+      headerName: 'Cód.',
       type: 'number',
       width: 80 
     },
@@ -60,9 +59,9 @@ export default function CustomerList() {
       width: 90,
       renderCell: params => (
         <Link to={`./${params.id}`}>
-        <IconButton aria-label='Editar'>
-          <EditIcon/>
-        </IconButton>
+          <IconButton aria-label="Editar">
+            <EditIcon />
+          </IconButton>
         </Link>
       )
     },
@@ -74,21 +73,23 @@ export default function CustomerList() {
       sortable: 'false',
       width: 90,
       renderCell: params => (
-        <IconButton aria-label='Excluir' onClick={() => handleDeleteButtonClick(params.id)}>
+        <IconButton aria-label="Excluir" onClick={() => handleDeleteButtonClick(params.id)}>
           <DeleteForeverIcon color="error" />
         </IconButton>
       )
-    }
+    },
   ]
 
   const [state, setState] = React.useState({
-    customers: [],
-    showWaiting: false
+    customers: []
   })
   const {
-    customers,
-    showWaiting
+    customers
   } = state
+
+  const { askForConfirmation, ConfirmDialog } = useConfirmDialog()
+  const { notify, Notification } = useNotification()
+  const { showWaiting, Waiting } = useWaiting()
 
   /*
     useEffect() com vetor de dependências vazio irá ser executado
@@ -99,53 +100,50 @@ export default function CustomerList() {
   }, [])
 
   async function fetchData() {
-    setState({ ...state, showWaiting: true })
+    showWaiting(true)
     try {
       const result = await myfetch.get('/customers')
-      console.log(result)
       setState({
         ...state,
-        customers: result,
-        showWaiting: false
+        customers: result
       })
     }
     catch(error) {
       console.error(error)
-      setState({
-        ...state,
-        showWaiting: false
-      })
+      notify(error.message, 'error')
+    }
+    finally {
+      showWaiting(false)
     }
   }
 
-  async function handleDeleteButtonClick(deleteId){
-    if(confirm('Deseja realmente excluir este item?')){
-      //Exibe a tela de espera
-      setState({ ...state, showWaiting: true })
+  async function handleDeleteButtonClick(deleteId) {
+    if(await askForConfirmation('Deseja realmente excluir este item?')) {
+      // Exibe a tela de espera
+      showWaiting(true)
       try {
         await myfetch.delete(`/customers/${deleteId}`)
-        
-        //Recarrega os dados da grid
+
+        // Recarrega os dados da grid
         fetchData()
 
-        alert('Item excluído com sucesso!')
-
-        //Esconde a tela de espera
-        setState({ ...state, showWaiting: false })
+        notify('Item excluído com sucesso.')
       }
-      catch(error){
-        alert(error.message)
-
-         //Esconde a tela de espera
-         setState({ ...state, showWaiting: false })
+      catch(error) {
+        console.log(error)
+        notify(error.message, 'error')
+      }
+      finally {
+        showWaiting(false)
       }
     }
   }
 
   return(
     <>
-
-      <Waiting show={showWaiting} />
+      <Waiting />
+      <Notification />
+      <ConfirmDialog />
 
       <Typography variant="h1" gutterBottom>
         Listagem de clientes
@@ -154,21 +152,21 @@ export default function CustomerList() {
       <Box sx={{
         display: 'flex',
         justifyContent: 'right',
-        mb: 2 //marginBOTTOM
+        mb: 2   // marginBottom
       }}>
         <Link to="./new">
           <Button
             variant="contained"
             size="large"
             color="secondary"
-            startIcon={<AddBoxIcon/>}
-            >
-              Novo Cliente
-            </Button>
+            startIcon={<AddBoxIcon />}
+          >
+            Novo cliente
+          </Button>
         </Link>
       </Box>
 
-      <Paper elevation={20}>
+      <Paper elevation={10}>
         <Box sx={{ height: 400, width: '100%' }}>
           <DataGrid
             rows={customers}
