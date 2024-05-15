@@ -26,10 +26,14 @@ export default function(req, res, next) {
 
   /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTENTICAÇÃO */
 
+  let token  = null
+
+  token = req.cookies[process.env.AUTH_COOKIE_NAME]
+
+  if(! token) {
+  
   // O token é enviado por meio do cabeçalho 'authorization'
   const authHeader = req.headers['authorization']
-
-  //console.log({HEADERS: req.headers})
 
   // O token não foi passado ~> HTTP 403: Forbidden
   if(! authHeader) {
@@ -41,7 +45,7 @@ export default function(req, res, next) {
   const authHeaderParts = authHeader.split(' ')
   // O token corresponde à segunda parte do cabeçalho
   const token = authHeaderParts[1]
-
+}
   // Validando o token
   jwt.verify(token, process.env.TOKEN_SECRET, (error, user) => {
 
