@@ -14,6 +14,8 @@ import useConfirmDialog from '../../ui/useConfirmDialog'
 import useNotification from '../../ui/useNotification'
 import useWaiting from '../../ui/useWaiting'
 import myfetch from '../../lib/myfetch'
+import Customer from '../../models/Customer'
+import { ZodError } from 'zod'
 
 export default function CustomerForm() {
 
@@ -38,11 +40,13 @@ export default function CustomerForm() {
 
   const [state, setState] = React.useState({
     customer: { ...formDefaults },
-    formModified: false
+    formModified: false,
+    inputErrors: {}
   })
   const {
     customer,
-    formModified
+    formModified,
+    inputErrors
   } = state
 
   const params = useParams()
@@ -78,10 +82,14 @@ export default function CustomerForm() {
     event.preventDefault()      // Evita que a página seja recarregada
     showWaiting(true)       // Exibe a tela de espera
     try {
+      // Invoca a validação dos dados da biblioteca Zod
+      // por meio do model Customer
+      Customer.parse(customer)
+
       // Se houver parâmetro na rota, significa que estamos modificando
       // um cliente já existente. A requisição será enviada ao back-end
       // usando o método PUT
-      if(params.id) await myfetch.put(`/customers/${params.id}`, customer)
+      if (params.id) await myfetch.put(`/customers/${params.id}`, customer)
       // Caso contrário, estamos criando um novo cliente, e enviaremos
       // a requisição com o método POST
       else await myfetch.post('/customers', customer)
@@ -92,9 +100,17 @@ export default function CustomerForm() {
         navigate('..', { relative: 'path', replace: true })
       })
     }
-    catch(error) {
+    catch (error) {
       console.error(error)
-      notify(error.message, 'error')
+      if (error instanceof ZodError) {
+        //Formamos um objeto contendo os erros do Zod e
+        // o colocamos na variável de estado inputErrors
+        const messages = {}
+        for (let i of error.issues) messages[i.path[0]] = i.message
+        setState({ ...state, inputErrors: messages })
+        notify('Há campos com valores inválidos no formulário', 'error')
+      }
+      else notify(error.message, 'error')
     }
     finally {
       // Desliga a tela de espera, seja em caso de sucesso, seja em caso de erro
@@ -109,7 +125,7 @@ export default function CustomerForm() {
     a função loadData() para buscar no back-end os dados do cliente a ser editado
   */
   React.useEffect(() => {
-    if(params.id) loadData()
+    if (params.id) loadData()
   }, [])
 
   async function loadData() {
@@ -123,7 +139,7 @@ export default function CustomerForm() {
 
       setState({ ...state, customer: result })
     }
-    catch(error) {
+    catch (error) {
       console.error(error)
       notify(error.message, 'error')
     }
@@ -133,10 +149,10 @@ export default function CustomerForm() {
   }
 
   async function handleBackButtonClick() {
-    if(formModified &&
-       ! await askForConfirmation('Há informações não salvas. Deseja realmente sair?')
+    if (formModified &&
+      ! await askForConfirmation('Há informações não salvas. Deseja realmente sair?')
     ) return  // Sai da função sem fazer nada
-    
+
     // Navega de volta para a página de listagem
     navigate('..', { relative: 'path', replace: true })
   }
@@ -146,15 +162,15 @@ export default function CustomerForm() {
       <ConfirmDialog />
       <Notification />
       <Waiting />
-      
+
       <Typography variant="h1" gutterBottom>
-        { params.id ? `Editar cliente #${params.id}` : 'Cadastrar novo cliente' }
+        {params.id ? `Editar cliente #${params.id}` : 'Cadastrar novo cliente'}
       </Typography>
 
       <Box className="form-fields">
         <form onSubmit={handleFormSubmit}>
 
-          <TextField 
+          <TextField
             name="name"
             label="Nome completo"
             variant="filled"
@@ -162,6 +178,8 @@ export default function CustomerForm() {
             fullWidth
             value={customer.name}
             onChange={handleFieldChange}
+            helperText={inputErrors?.name}
+            error={inputErrors?.name}
           />
 
           <InputMask
@@ -169,33 +187,37 @@ export default function CustomerForm() {
             value={customer.ident_document}
             onChange={handleFieldChange}
           >
-            { () => <TextField 
-                name="ident_document"
-                label="CPF"
-                variant="filled"
-                required
-                fullWidth
-              /> 
+            {() => <TextField
+              name="ident_document"
+              label="CPF"
+              variant="filled"
+              required
+              fullWidth
+              helperText={inputErrors?.ident_document}
+              error={inputErrors?.ident_document}
+            />
             }
           </InputMask>
 
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
-            <DatePicker 
+            <DatePicker
               label="Data de nascimento"
               value={customer.birth_date}
-              onChange={ value => handleFieldChange({
+              onChange={value => handleFieldChange({
                 target: { name: 'birth_date', value }
               })}
               slotProps={{
                 textField: {
                   variant: 'filled',
-                  fullWidth: true
+                  fullWidth: true,
+                  helperText: inputErrors?.birth_date,
+                  error: inputErrors?.birth_date
                 }
               }}
             />
           </LocalizationProvider>
 
-          <TextField 
+          <TextField
             name="street_name"
             label="Logradouro"
             placeholder="Rua, av., travessa, etc."
@@ -204,9 +226,11 @@ export default function CustomerForm() {
             fullWidth
             value={customer.street_name}
             onChange={handleFieldChange}
-          />   
+            helperText={inputErrors?.street_name}
+            error={inputErrors?.street_name}
+          />
 
-          <TextField 
+          <TextField
             name="house_number"
             label="nº"
             variant="filled"
@@ -214,9 +238,11 @@ export default function CustomerForm() {
             fullWidth
             value={customer.house_number}
             onChange={handleFieldChange}
-          />  
+            helperText={inputErrors?.house_number}
+            error={inputErrors?.house_number}
+          />
 
-          <TextField 
+          <TextField
             name="complements"
             label="Complemento"
             placeholder="Ap., bloco, casa, etc."
@@ -224,9 +250,11 @@ export default function CustomerForm() {
             fullWidth
             value={customer.complements}
             onChange={handleFieldChange}
+            helperText={inputErrors?.complements}
+            error={inputErrors?.complements}
           />
 
-          <TextField 
+          <TextField
             name="municipality"
             label="Município"
             variant="filled"
@@ -234,6 +262,8 @@ export default function CustomerForm() {
             fullWidth
             value={customer.municipality}
             onChange={handleFieldChange}
+            helperText={inputErrors?.municipality}
+            error={inputErrors?.municipality}
           />
 
           <TextField
@@ -245,15 +275,17 @@ export default function CustomerForm() {
             value={customer.state}
             onChange={handleFieldChange}
             select
+            helperText={inputErrors?.state}
+            error={inputErrors?.state}
           >
             {
-              states.map(s => 
+              states.map(s =>
                 <MenuItem key={s.value} value={s.value}>
                   {s.label}
                 </MenuItem>
               )
             }
-          </TextField>     
+          </TextField>
 
           <InputMask
             mask="(99) %9999-9999"
@@ -262,17 +294,19 @@ export default function CustomerForm() {
             value={customer.phone}
             onChange={handleFieldChange}
           >
-            { () => <TextField 
-                name="phone"
-                label="Telefone/celular"
-                variant="filled"
-                required
-                fullWidth
-              /> 
+            {() => <TextField
+              name="phone"
+              label="Telefone/celular"
+              variant="filled"
+              required
+              fullWidth
+              helperText={inputErrors?.phone}
+              error={inputErrors?.phone}
+            />
             }
           </InputMask>
 
-          <TextField 
+          <TextField
             name="email"
             label="E-mail"
             variant="filled"
@@ -280,7 +314,9 @@ export default function CustomerForm() {
             fullWidth
             value={customer.email}
             onChange={handleFieldChange}
-          />  
+            helperText={inputErrors?.email}
+            error={inputErrors?.email}
+          />
 
           <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
             <Button
@@ -296,11 +332,11 @@ export default function CustomerForm() {
             >
               Voltar
             </Button>
-          </Box> 
-
-          <Box sx={{ fontFamily: 'monospace', display: 'flex', width: '100%' }}>
-            {JSON.stringify(customer)}
           </Box>
+
+          {/* <Box sx={{ fontFamily: 'monospace', display: 'flex', width: '100%' }}>
+            {JSON.stringify(inputErrors)}
+          </Box> */}
 
         </form>
       </Box>
