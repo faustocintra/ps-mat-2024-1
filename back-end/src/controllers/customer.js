@@ -21,7 +21,9 @@ controller.create = async function (req, res) {
 
 controller.retrieveAll = async function (req, res) {
     try {
-        const result = await prisma.customer.findMany()
+        const result = await prisma.customer.findMany({
+            orderBy: { name: 'asc' }
+        })
 
         //HRRP 200: OK (implicito)
         res.send(result)
@@ -75,23 +77,23 @@ controller.update = async function(req,res) {
     }
 }
 
-controller.delete = async function(req,res) {
+controller.delete = async function (req, res) {
     try {
         const result = await prisma.customer.delete({
-            where: {id: Number(req.params.id)}
+        where: { id: Number(req.params.id) }
         })
 
-        //Encontrou e excluiu: retorna HTTP 204: No Content
+        // Encontrou e excluiu ~> HTTP 204: No Content
         if(result) res.status(204).end()
-        //Não encontrou (e não excluiu): retorna HTTP 404: Not Found
+        // Não encontrou (e não excluiu) ~> HTTP 404: Not Found
         else res.status(404).end()
     }
     catch(error) {
         console.log(error)
 
-        //HTTP 500: Internal Server Error
+        // HTTP 500: Internal Server Error
         res.status(500).end()
     }
-}
+    }
 
 export default controller
