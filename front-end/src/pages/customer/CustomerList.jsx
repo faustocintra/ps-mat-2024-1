@@ -91,6 +91,7 @@ export default function CustomerList() {
   const { notify, Notification } = useNotification()
   const { showWaiting, Waiting } = useWaiting()
 
+
   /*
     useEffect() com vetor de dependências vazio irá ser executado
     apenas uma vez, durante o carregamento inicial do componente
@@ -114,13 +115,16 @@ export default function CustomerList() {
     }
     finally {
       showWaiting(false)
+
     }
   }
 
   async function handleDeleteButtonClick(deleteId) {
+
     if(await askForConfirmation('Deseja realmente excluir este item?')) {
       // Exibe a tela de espera
       showWaiting(true)
+
       try {
         await myfetch.delete(`/customers/${deleteId}`)
 
@@ -135,6 +139,7 @@ export default function CustomerList() {
       }
       finally {
         showWaiting(false)
+
       }
     }
   }

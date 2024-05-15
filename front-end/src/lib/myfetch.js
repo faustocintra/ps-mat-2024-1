@@ -66,20 +66,24 @@ function processResponse(response) {
 myfetch.post = async function(path, body) {
   const response = await fetch(baseUrl + path, getOptions(body, 'POST'))
   return processResponse(response)
-}
+
 
 myfetch.put = async function(path, body) {
   const response = await fetch(baseUrl + path, getOptions(body, 'PUT'))
+
   return processResponse(response)
+
 }
 
 myfetch.get = async function(path) {
   const response = await fetch(baseUrl + path, getOptions())
+
   return processResponse(response)
 }
 
 myfetch.delete = async function(path) {
   const response = await fetch(baseUrl + path, getOptions(null, 'DELETE'))
+  
   return processResponse(response)
 }
 

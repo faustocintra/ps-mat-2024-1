@@ -4,16 +4,19 @@ import myfetch from '../lib/myfetch'
 import AuthUserContext from '../contexts/AuthUserContext'
 import useWaiting from '../ui/useWaiting'
 
+
 export default function AuthGuard({ children }) {
 
   const [hasAuthUser, setHasAuthUser] = React.useState() // undefined
   const { setAuthUser } = React.useContext(AuthUserContext)
 
   const location = useLocation()
+
   const { showWaiting, Waiting } = useWaiting()
 
   async function checkAuthUser() {
     showWaiting(true)
+
     try {
       await myfetch.get('/users/me')
       setHasAuthUser(true)
@@ -25,6 +28,7 @@ export default function AuthGuard({ children }) {
       setAuthUser(null)
       setHasAuthUser(false)
     }
+
     finally {
       showWaiting(false)
     }

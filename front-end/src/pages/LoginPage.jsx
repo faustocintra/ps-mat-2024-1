@@ -8,9 +8,11 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import myfetch from '../lib/myfetch'
+
 import useNotification from '../ui/useNotification'
 import { useNavigate } from 'react-router-dom'
 import useWaiting from '../ui/useWaiting'
+
 import AuthUserContext from '../contexts/AuthUserContext'
 
 export default function LoginPage() {
@@ -18,12 +20,21 @@ export default function LoginPage() {
   const [state, setState] = React.useState({
     showPassword: false,
     email: '',
-    password: ''
+    password: '',
+    showWaiting: false,
+    notif: {
+      show: false,
+      message: '',
+      severity: 'success',
+      timeout: 1500
+    }
   })
   const {
     showPassword,
     email,
-    password
+    password,
+    showWaiting,
+    notif
   } = state
 
   const { notify, Notification } = useNotification()
@@ -45,9 +56,9 @@ export default function LoginPage() {
 
   async function handleSubmit(event) {
     event.preventDefault()    // Evita que a página seja recarregada
+
     showWaiting(true)
     try {
-
       const response = await myfetch.post('/users/login', {email, password})
       //console.log(response)
 
@@ -64,6 +75,7 @@ export default function LoginPage() {
     }
     catch(error) {
       console.error(error)
+
       notify(error.message, 'error')
     }
     finally {
@@ -76,6 +88,7 @@ export default function LoginPage() {
       
       <Waiting />
       <Notification />
+
 
       <Typography variant="h1" sx={{ textAlign: 'center' }} gutterBottom>
         Autentique-se

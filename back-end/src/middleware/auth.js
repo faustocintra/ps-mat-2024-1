@@ -30,6 +30,7 @@ export default function(req, res, next) {
   // 1. PROCURA O TOKEN EM UM COOKIE
   token = req.cookies[process.env.AUTH_COOKIE_NAME]
 
+
   // 2. SE O TOKEN NÃO FOR ENCONTRADO NO COOKIE, PROCURA NO
   // HEADER DE AUTORIZAÇÃO
   if(! token) {

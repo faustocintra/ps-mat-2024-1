@@ -10,8 +10,10 @@ import useConfirmDialog from './useConfirmDialog'
 import useNotification from './useNotification'
 import myfetch from '../lib/myfetch'
 
+
 export default function AuthControl() {
   const { authUser, setAuthUser } = React.useContext(AuthUserContext)
+
 
   const { showWaiting, Waiting } = useWaiting()
   const { askForConfirmation, ConfirmDialog } = useConfirmDialog()
@@ -38,6 +40,7 @@ export default function AuthControl() {
         notify(error.message, 'error')
         showWaiting(false)
       }
+
     }
   }
 
@@ -47,7 +50,6 @@ export default function AuthControl() {
         <Waiting />
         <Notification />
         <ConfirmDialog />
-
         <AccountCircleIcon color="secondary" fontSize="small" sx={{ mr: 1 }} />
         <Typography variant="caption">
           {authUser.fullname}

@@ -56,4 +56,3 @@ model Seller {
   phone               String    
   is_manager          Boolean  @default(false) 
 }
-
