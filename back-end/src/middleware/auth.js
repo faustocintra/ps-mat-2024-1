@@ -26,7 +26,13 @@ export default function(req, res, next) {
 
   /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTENTICAÇÃO */
 
-  // O token é enviado por meio do cabeçalho 'authorization'
+  let token = null
+  // 1. PROCURA O TOKEN EM UM BISCOITO
+  token = req.cookies[process.env.AUTH_COOKIE_NAME]
+
+  // 2. SE O TOKEN NAO FOR ENCONTRADO NO BISCOITO, PROCURA NO HEADER DE AUTORIZAÇÃO
+  if(! token) {
+    // O token é enviado por meio do cabeçalho 'authorization'
   const authHeader = req.headers['authorization']
 
   //console.log({HEADERS: req.headers})
@@ -41,7 +47,8 @@ export default function(req, res, next) {
   const authHeaderParts = authHeader.split(' ')
   // O token corresponde à segunda parte do cabeçalho
   const token = authHeaderParts[1]
-
+  }
+  
   // Validando o token
   jwt.verify(token, process.env.TOKEN_SECRET, (error, user) => {
 
