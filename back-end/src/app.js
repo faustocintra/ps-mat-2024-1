@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 
 import dotenv from 'dotenv'
-//carrega as variáveis de ambiente do arquivo .env
+// Carrega as variáveis de ambiente do arquivo .env
 dotenv.config()
 
 import indexRouter from "./routes/index.js";
@@ -14,8 +14,8 @@ const app = express();
 import cors from 'cors'
 
 app.use(cors({
-    origin: process.env.FRONT_END_URL.split(','),
-    credentials: true
+  origin: process.env.FRONT_END_URL.split(','),
+  credentials: true
 }))
 
 app.use(logger("dev"));
@@ -26,9 +26,9 @@ app.use(cookieParser());
 app.use("/", indexRouter);
 //app.use("/users", usersRouter);
 
-/************************************
- * ROTAS DE API
- ************************************/
+/************************************************
+ * ROTAS DA API
+************************************************/
 
 // Middleware que protege as rotas com autenticação
 import auth from './middleware/auth.js'
@@ -37,13 +37,10 @@ app.use(auth)
 import carRoute from './routes/car.js'
 app.use('/cars', carRoute)
 
-import usersRoute from './routes/user.js'
-app.use('/users', usersRoute)
+import userRoute from './routes/user.js'
+app.use('/users', userRoute)
 
 import customerRoute from './routes/customer.js'
 app.use('/customers', customerRoute)
-
-import sellerRoute from './routes/seller.js'
-app.use('/seller', sellerRoute)
 
 export default app;

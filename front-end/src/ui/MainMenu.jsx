@@ -18,18 +18,18 @@ export default function MainMenu() {
   return (
     <div>
       <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClick}
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
+        size="large"
+        edge="start"
+        color="inherit"
+        aria-label="menu"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+        sx={{ mr: 2 }}
+      >
+        <MenuIcon />
+      </IconButton>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

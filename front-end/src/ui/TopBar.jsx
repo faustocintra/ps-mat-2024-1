@@ -9,12 +9,12 @@ import AuthControl from './AuthControl'
 export default function TopBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" enableColorOnDark> 
+      <AppBar position="static" enableColorOnDark>
         <Toolbar>
           <MainMenu />
           <Box sx={{ flexGrow: 1 }}>
-            <img src={logo} alt='Logotipo Karangos' style={{ width: '300px'}} />
-            </Box>
+            <img src={logo} alt="Logotipo Karangos" style={{ width: '300px '}} />
+          </Box>
           <AuthControl />
         </Toolbar>
       </AppBar>

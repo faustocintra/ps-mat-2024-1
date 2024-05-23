@@ -8,9 +8,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import myfetch from '../lib/myfetch'
-import Notification from '../ui/Notification'
-import {useNavigate} from 'react-router-dom'
-import Waiting from '../ui/Waiting'
+import useNotification from '../ui/useNotification'
+import { useNavigate } from 'react-router-dom'
+import useWaiting from '../ui/useWaiting'
 import AuthUserContext from '../contexts/AuthUserContext'
 
 export default function LoginPage() {
@@ -18,111 +18,69 @@ export default function LoginPage() {
   const [state, setState] = React.useState({
     showPassword: false,
     email: '',
-    password:'',
-    showWaiting: false,
-    notif: {
-      show: false,
-      message: '',
-      severity: 'sucess',
-      timeout: 1500
-    }
+    password: ''
   })
-  const{
+  const {
     showPassword,
     email,
-    password,
-    showWaiting,
-    notif
+    password
   } = state
 
-  const {setAuthUser} = React.useContext(AuthUserContext)
+  const { notify, Notification } = useNotification()
+  const { showWaiting, Waiting } = useWaiting()
+
+  const { setAuthUser } = React.useContext(AuthUserContext)
 
   const navigate = useNavigate()
 
-  const handleClickShowPassword = () => setState({...state, showPassword: 
-    !showPassword})
+  const handleClickShowPassword = () => setState({...state, showPassword: !showPassword})
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault()
   }
 
-  function handleChange(event){
+  function handleChange(event) {
     setState({...state, [event.target.name]: event.target.value})
   }
 
-  async function handleSubmit (event){
-    event.preventDefault()  //evita que a página seja recarregada
-    
-    try{
+  async function handleSubmit(event) {
+    event.preventDefault()    // Evita que a página seja recarregada
+    showWaiting(true)
+    try {
 
-      //exibe o backdrop de espera
-       setState({...state, showWaiting: true})
+      const response = await myfetch.post('/users/login', {email, password})
+      //console.log(response)
 
-        const response = await myfetch.post('/users/login', {email, password})
-       // console.log(response)
+      // Armazena o token no localStorage (INSEGURO!! ISSO É PROVISÓRIO!!)
+      window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
 
-       // Armazena  o token no localStorage (INSEGURO!! ISSO É PRPVISÓRIO!!)
-       window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
+      // Armazena as informações do usuário autenticado no contexto
+      // AuthUserContext
+      setAuthUser(response.user)
 
-       // Armazeba informações do usuário autenticado no contexto
-       //AuthUserContext
-       setAuthUser(response.user)
-
-       // Mostra notificação de sucesso
-       setState({...state,
-        showWaiting: false,
-         notif: {
-        show: true,
-        message: 'Autenticação efetuada com sucesso',
-        severity: 'sucess',
-        timeout: 1500
-       }})
-
+      // Mostra notificação de sucesso
+      notify('Autenticação efetuada com sucesso.', 'success', 1500, () => navigate('/'))
+      
     }
-    catch(error){
-        console.error(error)
-
-        setState({...state, 
-          showWaiting: false,
-          notif: {
-          show: true,
-          message: error.message,
-          severity: 'error',
-          timeout: 1500
-         }})
+    catch(error) {
+      console.error(error)
+      notify(error.message, 'error')
+    }
+    finally {
+      showWaiting(false)
     }
   }
 
-function handleNotificationClose(){
-  const status = notif.severity
-
-  //Fecha a barra de notificação
-  setState({...state, notif: {
-    show: false,
-    severity: status,
-    message: '',
-    timeout: 1500
-  }})
-
-  //vai para a pagina inicial, caso o login tenha sido feito com sucesso
-  if(status ==='sucess') navigate('/')
-
-}
-
   return (
     <>
+      
+      <Waiting />
+      <Notification />
 
-    <Waiting show={showWaiting} />
-    <Notification
-    show={notif.show}
-    severity={notif.severity}
-    message={notif.message}
-    timeout={notif.timeout}
-    onClose={handleNotificationClose}
-    />
       <Typography variant="h1" sx={{ textAlign: 'center' }} gutterBottom>
         Autentique-se
       </Typography>
+
       <Paper 
         elevation={6}
         sx={{
@@ -132,17 +90,18 @@ function handleNotificationClose(){
         }}
       >
         <form onSubmit={handleSubmit}>
-        <TextField
-        name='email'
-        value={email}
-         label="E-mail" 
-         onChange={handleChange}
-         variant="filled" 
-         fullWidth
-         sx={{ mb: '24px' }}
+          <TextField
+            name="email"
+            value={email}
+            onChange={handleChange}
+            label="E-mail" 
+            variant="filled" 
+            fullWidth
+            sx={{ mb: '24px' }} 
           />
-        <TextField
-            name='password'
+          
+          <TextField
+            name="password"
             value={password}
             onChange={handleChange}
             variant="filled"
@@ -164,15 +123,17 @@ function handleNotificationClose(){
                 </InputAdornment>
               }}
           />
-        <Button 
-        variant="contained" 
-        type="submit"
-        color="secondary"
-        fullWidth
-        >
-                 Enviar
-                 </Button>
-            </form>
+
+          <Button 
+            variant="contained" 
+            type="submit"
+            color="secondary"
+            fullWidth
+          >
+            Enviar
+          </Button>
+        </form>
+        
       </Paper>
     </>
   )

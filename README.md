@@ -1,39 +1,32 @@
-# Comando de criação do projeto back-end
-
+Comando de criação do projeto back-end
 npx @aka-demy/create-express-app
+
 Perguntas que o comando faz:
-app-name: back-end
-*Language: JavaScript
-*Template engine: None
-*Package manager: npm
 
-http://localhost:8080/
-
-# instalação do Prisma
+Ok to proceed? y
+Give a name for the app: back-end
+Language: Javascript
+Template engine: None
+Package manager: npm
+Instalação do Prisma
 npm install prisma --save-dev
 
-# inicialização do Prisma 
+Inicialização do Prisma
 npx prisma init --datasource-provider postgresql
 
-# Executar uma migration
+Executar uma migration
 npx prisma migrate dev --name create-cars
 
-# Comando de criação do projeto front-end
+Comando de criação do projeto front-end
 npm create vite@latest
 
-Perguntas que o comdando faz:
-* Pk to proceed? y
-* Project name: front-end
-* select framework: React
-* Select a variant: JavaScript
+Perguntas que o comando faz:
 
-Em seguida executar os comandos:
-cd front-end
-npm install
-npm run dev
+Ok to proceed? y
+Project name: front-end
+Select a framework: React
+Select a variant: JavaScript
+Em seguida, executar os seguintes comandos no terminal: cd front-end npm install npm run dev
 
-# Instalação das ibliotecas adicionais no projeto front-end
-npm install react-router-dom
-npm install @mui/material @emotion/react @emotion/styled
-npm install @fontsource/roboto
-npm install @mui/icons-material
+Instalação de bibliotecas adicionais no projeto front-end
+npm install react-router-dom npm install @mui/material @emotion/react @emotion/styled npm install @fontsource/roboto npm install @mui/icons-material
