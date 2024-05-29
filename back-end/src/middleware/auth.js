@@ -25,14 +25,14 @@ export default function(req, res, next) {
   }
 
   /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTENTICAÇÃO */
-
   let token = null
 
-  //  1. PROCURA O TOKEN EM UM COOKIE
+  // 1. PROCURA O TOKEN EM UM COOKIE
   token = req.cookies[process.env.AUTH_COOKIE_NAME]
 
-  // 2. SE O TOKEN NÃO FOR ENCONTRADO NO COOKIE, PROCURA NO HEADER DE AUTORIZAÇÃO
-  if(!token ) {
+  // 2. SE O TOKEN NÃO FOR ENCONTRADO NO COOKIE, PROCURA NO
+  // HEADER DE AUTORIZAÇÃO
+  if(! token) {
 
     // O token é enviado por meio do cabeçalho 'authorization'
     const authHeader = req.headers['authorization']
@@ -45,9 +45,9 @@ export default function(req, res, next) {
 
     // Extrai o token de dentro do cabeçalho 'authentication'
     const authHeaderParts = authHeader.split(' ')
-
+    
     // O token corresponde à segunda parte do cabeçalho
-    const token = authHeaderParts[1]
+    token = authHeaderParts[1]
   }
 
   // Validando o token
@@ -70,5 +70,5 @@ export default function(req, res, next) {
     next()
 
   })
-
+  
 }

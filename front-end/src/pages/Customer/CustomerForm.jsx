@@ -3,12 +3,14 @@ import Typography from '@mui/material/Typography'
 import { useParams, useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import InputMask from 'react-input-mask'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { ptBR } from 'date-fns/locale/pt-BR'
 import { parseISO } from 'date-fns'
-import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 import useConfirmDialog from '../../ui/useConfirmDialog'
 import useNotification from '../../ui/useNotification'
