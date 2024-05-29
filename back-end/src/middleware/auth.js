@@ -25,27 +25,31 @@ export default function(req, res, next) {
   }
 
   /* PROCESSO DE VERIFICAÇÃO DO TOKEN DE AUTENTICAÇÃO */
+  let token = null
 
-  let token  = null
-
+  // 1. PROCURA O TOKEN EM UM COOKIE
   token = req.cookies[process.env.AUTH_COOKIE_NAME]
 
+  // 2. SE O TOKEN NÃO FOR ENCONTRADO NO COOKIE, PROCURA NO
+  // HEADER DE AUTORIZAÇÃO
   if(! token) {
-  
-  // O token é enviado por meio do cabeçalho 'authorization'
-  const authHeader = req.headers['authorization']
 
-  // O token não foi passado ~> HTTP 403: Forbidden
-  if(! authHeader) {
-    console.error('ERRO: Acesso negado por falta de token')
-    return res.status(403).end()
+    // O token é enviado por meio do cabeçalho 'authorization'
+    const authHeader = req.headers['authorization']
+
+    // O token não foi passado ~> HTTP 403: Forbidden
+    if(! authHeader) {
+      console.error('ERRO: Acesso negado por falta de token')
+      return res.status(403).end()
+    }
+
+    // Extrai o token de dentro do cabeçalho 'authentication'
+    const authHeaderParts = authHeader.split(' ')
+    
+    // O token corresponde à segunda parte do cabeçalho
+    token = authHeaderParts[1]
   }
 
-  // Extrai o token de dentro do cabeçalho 'authentication'
-  const authHeaderParts = authHeader.split(' ')
-  // O token corresponde à segunda parte do cabeçalho
-  const token = authHeaderParts[1]
-}
   // Validando o token
   jwt.verify(token, process.env.TOKEN_SECRET, (error, user) => {
 

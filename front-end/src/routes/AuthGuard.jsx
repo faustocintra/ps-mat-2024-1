@@ -36,6 +36,6 @@ export default function AuthGuard({ children }) {
   // exibimos um componente Waiting
   if(hasAuthUser === undefined) return <Waiting />
 
-  return hasAuthUser ? children : <Navigate to="/login" replace />
-  
+  return hasAuthUser ? children : <Navigate to="/login" replace />
+  
 }

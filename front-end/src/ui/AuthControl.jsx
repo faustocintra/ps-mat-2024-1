@@ -70,7 +70,7 @@ export default function AuthControl() {
       <Link to="/login">
         <Button color="secondary">Entrar</Button>
       </Link>
-    )
-  }
+    )
+  }
 
 }

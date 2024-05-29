@@ -40,7 +40,7 @@ export default function LoginPage() {
   }
 
   function handleChange(event) {
-    setState({...state, [event.target.fullname]: event.target.value})
+    setState({...state, [event.target.name]: event.target.value})
   }
 
   async function handleSubmit(event) {
@@ -135,6 +135,6 @@ export default function LoginPage() {
         </form>
         
       </Paper>
-    </>
-  )
+    </>
+  )
 }

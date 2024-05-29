@@ -24,7 +24,7 @@ export default function FooterBar() {
         }}
         >
           Desenvolvido com <CoffeIcon fontzise="small" /> por <a
-          href="biancakaroliner04@gmail.com">Giovanna Cerino</a>, 2024
+          href="biancakaroliner04@gmail.com">Bianca Karoline Ramos</a>, 2024
         </Typography>
     </Toolbar>
   )

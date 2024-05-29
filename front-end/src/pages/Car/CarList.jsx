@@ -1,54 +1,81 @@
 import React from 'react'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid } from '@mui/x-data-grid';
 import myfetch from '../../lib/myfetch'
 import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
 import { Link } from 'react-router-dom'
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import useConfirmDialog from '../../ui/useConfirmDialog';
-import useNotification from '../../ui/useNotification';
-import useWaiting from '../../ui/useWaiting';
+import AddBoxIcon from '@mui/icons-material/AddBox'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import useConfirmDialog from '../../ui/useConfirmDialog'
+import useNotification from '../../ui/useNotification'
+import useWaiting from '../../ui/useWaiting'
  
-export default function CustomerList() {
+export default function CarList() {
  
   const columns = [
     {
       field: 'id',
       headerName: 'Cód.',
       type: 'number',
-      width: 80
+      width: 50
     },
     {
-      field: 'fullname',
-      headerName: 'Nome',
-      width: 250
+      field: 'brand',
+      headerName: 'Marca/Modelo',
+      width: 200,
+      // Colocando dois campos na mesma célula
+      valueGetter: (value, row) => row.brand + '/' + row.model
     },
     {
-      field: 'ident_document',
-      headerName: 'CPF',
+      field: 'color',
+      headerName: 'Cor',
+      width: 150,
+    },
+    {
+      field: 'year_manufacture',
+      headerName: 'Ano de fabricação',
       width: 150
     },
     {
-      field: 'municipality',
-      headerName: 'Município/UF',
-      width: 200,
-      // Colocando dois campos na mesma célula
-      valueGetter: (value, row) => row.municipality + '/' + row.state
+      field: 'imported',
+      headerName: 'Importado?',
+      width: 100,
+      valueGetter: (value, row) => row.imported ? 'Sim' : ''
     },
     {
-      field: 'phone',
-      headerName: 'Tel./celular',
-      width: 160
+      field: 'plates',
+      headerName: 'Placas',
+      width: 150
     },
     {
-      field: 'email',
-      headerName: 'E-mail',
-      width: 250
+      field: 'selling_date',
+      headerName: 'Data de venda',
+      width: 150,
+      valueGetter: (value, row) => {
+        if (row.selling_date) {
+          const sellingDate = new Date(row.selling_date);
+          const day = String(sellingDate.getDate()).padStart(2, '0');
+          const month = String(sellingDate.getMonth() + 1).padStart(2, '0');
+          const year = sellingDate.getFullYear();
+          return `${day}/${month}/${year}`;
+        }
+        return '';
+      }
+    },
+    {
+      field: 'selling_price',
+      headerName: 'Preço de venda',
+      width: 250,
+      valueGetter: (value, row) => {
+        if (row.selling_price) {
+          return parseFloat(row.selling_price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+        return '';
+      }
     },
     {
       field: '_edit',
@@ -77,14 +104,14 @@ export default function CustomerList() {
           <DeleteForeverIcon color="error" />
         </IconButton>
       )
-    }
-  ];
+    },
+  ]
  
   const [state, setState] = React.useState({
-    customers: [],
+    cars: []
   })
   const {
-    customers,
+    cars
   } = state
  
   const { askForConfirmation, ConfirmDialog } = useConfirmDialog()
@@ -100,15 +127,16 @@ export default function CustomerList() {
   }, [])
  
   async function fetchData() {
-    setState({ ...state, showWaiting: true })
+    showWaiting(true)
     try {
-      const result = await myfetch.get('/customers')
+      const result = await myfetch.get('/cars')
+      console.log(result)
       setState({
         ...state,
-        customers: result,
+        cars: result
       })
     }
-    catch (error) {
+    catch(error) {
       console.error(error)
       notify(error.message, 'error')
     }
@@ -118,18 +146,18 @@ export default function CustomerList() {
   }
  
   async function handleDeleteButtonClick(deleteId) {
-    if (await askForConfirmation('Deseja realmente excluir este item?')) {
-      //Exibe a tela de espera
+    if(await askForConfirmation('Deseja realmente excluir este item?')) {
+      // Exibe a tela de espera
       showWaiting(true)
       try {
-        await myfetch.delete(`/customers/${deleteId}`)
+        await myfetch.delete(`/cars/${deleteId}`)
  
-        //Reacarrega os dados da grid
+        // Recarrega os dados da grid
         fetchData()
  
-        notify('Item excluído com sucesso')
+        notify('Item excluído com sucesso.')
       }
-      catch (error) {
+      catch(error) {
         console.log(error)
         notify(error.message, 'error')
       }
@@ -139,20 +167,20 @@ export default function CustomerList() {
     }
   }
  
-  return (
+  return(
     <>
       <Waiting />
       <Notification />
       <ConfirmDialog />
  
       <Typography variant="h1" gutterBottom>
-        Listagem de clientes
+        Listagem de carros
       </Typography>
  
       <Box sx={{
         display: 'flex',
         justifyContent: 'right',
-        mb: 2 //marginButton
+        mb: 2   // marginBottom
       }}>
         <Link to="./new">
           <Button
@@ -161,7 +189,7 @@ export default function CustomerList() {
             color="secondary"
             startIcon={<AddBoxIcon />}
           >
-            Novo Cliente
+            Novo carro
           </Button>
         </Link>
       </Box>
@@ -169,7 +197,7 @@ export default function CustomerList() {
       <Paper elevation={10}>
         <Box sx={{ height: 400, width: '100%' }}>
           <DataGrid
-            rows={customers}
+            rows={cars}
             columns={columns}
             initialState={{
               pagination: {

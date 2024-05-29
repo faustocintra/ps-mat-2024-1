@@ -23,7 +23,7 @@ controller.create = async function (req, res) {
 controller.retrieveAll = async function (req, res) {
   try {
     const result = await prisma.customer.findMany({
-      orderBy: { name: 'asc' }
+      orderBy: { fullname: 'asc' }
     })
 
     // HTTP 200: OK (implícito)
