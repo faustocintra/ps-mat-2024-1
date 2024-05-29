@@ -36,7 +36,7 @@ export default z.object({
     .max(maxBirthDate, { message: 'O cliente deve ser maior de 18 anos' })
     .nullable(),   // O campo é opcional
 
-  street_name:
+  selling_date:
     z.string()
     .max(40, { message: 'O logradouro pode ter, no máximo, 40 caracteres' }),
 
