@@ -13,42 +13,53 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import useConfirmDialog from '../../ui/useConfirmDialog'
 import useNotification from '../../ui/useNotification'
 import useWaiting from '../../ui/useWaiting'
+import { format } from 'date-fns';
 
-export default function CustomerList() {
+export default function CarList() {
 
   const columns = [
-    { 
-      field: 'id', 
+    {
+      field: 'id',
       headerName: 'Cód.',
       type: 'number',
-      width: 80 
+      width: 80
     },
     {
-      field: 'name',
-      headerName: 'Nome',
-      width: 250
+      field: 'brand',
+      headerName: 'Marca/Modelo',
+      width: 250,
+      valueGetter: (value, row) => row.brand + '/' + row.model
     },
     {
-      field: 'ident_document',
-      headerName: 'CPF',
+      field: 'color',
+      headerName: 'COR',
       width: 150
     },
     {
-      field: 'municipality',
-      headerName: 'Município/UF',
+      field: 'year_manufacture',
+      headerName: 'Ano de Fabricação',
+      width: 200
+    },
+    {
+      field: 'imported',
+      headerName: 'Importado',
+      width: 150,
+      valueGetter: (value, row) => Boolean(row.imported) ? 'Sim' : ''
+    },
+    {
+      field: 'selling_date',
+      headerName: 'Data de Venda',
       width: 200,
-      // Colocando dois campos na mesma célula
-      valueGetter: (value, row) => row.municipality + '/' + row.state
+      valueGetter: (value, row) => format(row.selling_date, 'dd/MM/yyyy')
     },
     {
-      field: 'phone',
-      headerName: 'Tel./celular',
-      width: 160
-    },
-    {
-      field: 'email',
-      headerName: 'E-mail',
-      width: 250
+      field: 'selling_price',
+      headerName: 'Valor de Venda',
+      width: 250,
+      valueGetter: (value, row) => Number(row.selling_price).toLocaleString(
+        'pt-BR',  // Português do Brasil
+        { style: 'currency', currency: 'BRL' }   // Moeda: real brasileiro
+      )
     },
     {
       field: '_edit',
@@ -81,10 +92,10 @@ export default function CustomerList() {
   ]
 
   const [state, setState] = React.useState({
-    customers: []
+    cars: []
   })
   const {
-    customers
+    cars
   } = state
 
   const { askForConfirmation, ConfirmDialog } = useConfirmDialog()
@@ -102,13 +113,13 @@ export default function CustomerList() {
   async function fetchData() {
     showWaiting(true)
     try {
-      const result = await myfetch.get('/customers')
+      const result = await myfetch.get('/cars')
       setState({
         ...state,
-        customers: result
+        cars: result
       })
     }
-    catch(error) {
+    catch (error) {
       console.error(error)
       notify(error.message, 'error')
     }
@@ -118,18 +129,18 @@ export default function CustomerList() {
   }
 
   async function handleDeleteButtonClick(deleteId) {
-    if(await askForConfirmation('Deseja realmente excluir este item?')) {
+    if (await askForConfirmation('Deseja realmente excluir este item?')) {
       // Exibe a tela de espera
       showWaiting(true)
       try {
-        await myfetch.delete(`/customers/${deleteId}`)
+        await myfetch.delete(`/cars/${deleteId}`)
 
         // Recarrega os dados da grid
         fetchData()
 
         notify('Item excluído com sucesso.')
       }
-      catch(error) {
+      catch (error) {
         console.log(error)
         notify(error.message, 'error')
       }
@@ -139,14 +150,14 @@ export default function CustomerList() {
     }
   }
 
-  return(
+  return (
     <>
       <Waiting />
       <Notification />
       <ConfirmDialog />
 
       <Typography variant="h1" gutterBottom>
-        Listagem de clientes
+        Listagem de carros
       </Typography>
 
       <Box sx={{
@@ -161,7 +172,7 @@ export default function CustomerList() {
             color="secondary"
             startIcon={<AddBoxIcon />}
           >
-            Novo cliente
+            Novo Carro
           </Button>
         </Link>
       </Box>
@@ -169,7 +180,7 @@ export default function CustomerList() {
       <Paper elevation={10}>
         <Box sx={{ height: 400, width: '100%' }}>
           <DataGrid
-            rows={customers}
+            rows={cars}
             columns={columns}
             initialState={{
               pagination: {

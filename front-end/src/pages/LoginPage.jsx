@@ -8,130 +8,80 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import myfetch from '../lib/myfetch'
-import Notification from '../ui/Notification'
+import useNotification from '../ui/useNotification'
 import { useNavigate } from 'react-router-dom'
-import Waiting from '../ui/Waiting'
+import useWaiting from '../ui/useWaiting'
 import AuthUserContext from '../contexts/AuthUserContext'
 
 export default function LoginPage() {
 
-  const { setAuthUser } = React.useContext(AuthUserContext)
-
   const [state, setState] = React.useState({
     showPassword: false,
     email: '',
-    password: '',
-    showWaiting: false,
-    notif: {
-      show: false,
-      message: '',
-      severity: 'success',
-      timeout: 1500
-    }
+    password: ''
   })
   const {
     showPassword,
     email,
-    password,
-    showWaiting,
-    notif
+    password
   } = state
+
+  const { notify, Notification } = useNotification()
+  const { showWaiting, Waiting } = useWaiting()
+
+  const { setAuthUser } = React.useContext(AuthUserContext)
 
   const navigate = useNavigate()
 
-  const handleClickShowPassword = () => setState({ ...state, showPassword: !showPassword })
+  const handleClickShowPassword = () => setState({...state, showPassword: !showPassword})
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault()
   }
 
   function handleChange(event) {
-    setState({ ...state, [event.target.name]: event.target.value })
+    setState({...state, [event.target.name]: event.target.value})
   }
 
   async function handleSubmit(event) {
     event.preventDefault()    // Evita que a página seja recarregada
-
+    showWaiting(true)
     try {
 
-      // Exibe o backdrop de espera
-      setState({ ...state, showWaiting: true })
-
-      const response = await myfetch.post('/users/login', { email, password })
+      const response = await myfetch.post('/users/login', {email, password})
       //console.log(response)
 
       // Armazena o token no localStorage (INSEGURO!! ISSO É PROVISÓRIO!!)
       window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response.token)
+
       // Armazena as informações do usuário autenticado no contexto
       // AuthUserContext
       setAuthUser(response.user)
 
-
       // Mostra notificação de sucesso
-      setState({
-        ...state,
-        showWaiting: false,
-        notif: {
-          show: true,
-          message: 'Autenticação efetuada com sucesso.',
-          severity: 'success',
-          timeout: 1500
-        }
-      })
-
+      notify('Autenticação efetuada com sucesso.', 'success', 1500, () => navigate('/'))
+      
     }
-    catch (error) {
+    catch(error) {
       console.error(error)
-
-      // Mostra notificação de erro
-      setState({
-        ...state,
-        showWaiting: false,
-        notif: {
-          show: true,
-          message: error.message,
-          severity: 'error',
-          timeout: 4000
-        }
-      })
+      notify(error.message, 'error')
     }
-  }
-
-  function handleNotificationClose() {
-    const status = notif.severity
-
-    // Fecha a barra de notificação
-    setState({
-      ...state, notif: {
-        show: false,
-        severity: status,
-        message: '',
-        timeout: 1500
-      }
-    })
-
-    // Vai para a página inicial, caso o login tenha sido feito com sucesso
-    if (status === 'success') navigate('/')
+    finally {
+      showWaiting(false)
+    }
   }
 
   return (
     <>
-
-      <Waiting show={showWaiting} />
-
-      <Notification
-        show={notif.show}
-        severity={notif.severity}
-        message={notif.message}
-        timeout={notif.timeout}
-        onClose={handleNotificationClose}
-      />
+      
+      <Waiting />
+      <Notification />
 
       <Typography variant="h1" sx={{ textAlign: 'center' }} gutterBottom>
         Autentique-se
       </Typography>
 
-      <Paper
+      <Paper 
         elevation={6}
         sx={{
           padding: '24px',
@@ -144,12 +94,12 @@ export default function LoginPage() {
             name="email"
             value={email}
             onChange={handleChange}
-            label="E-mail"
-            variant="filled"
+            label="E-mail" 
+            variant="filled" 
             fullWidth
-            sx={{ mb: '24px' }}
+            sx={{ mb: '24px' }} 
           />
-
+          
           <TextField
             name="password"
             value={password}
@@ -160,7 +110,7 @@ export default function LoginPage() {
             fullWidth
             sx={{ mb: '24px' }}
             InputProps={{
-              endAdornment:
+              endAdornment: 
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
@@ -171,11 +121,11 @@ export default function LoginPage() {
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
-            }}
+              }}
           />
 
-          <Button
-            variant="contained"
+          <Button 
+            variant="contained" 
             type="submit"
             color="secondary"
             fullWidth
@@ -183,7 +133,7 @@ export default function LoginPage() {
             Enviar
           </Button>
         </form>
-
+        
       </Paper>
     </>
   )

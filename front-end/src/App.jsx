@@ -17,7 +17,8 @@ import AppRoutes from './routes/AppRoutes'
 import TopBar from './ui/TopBar'
 import FooterBar from './ui/FooterBar'
 import AuthUserContext from './contexts/AuthUserContext'
-import myfetch from './lib/myfetch';
+
+import myfetch from './lib/myfetch'
 
 function App() {
   // Armazena globalmente as informações do usuário autenticado
@@ -26,9 +27,9 @@ function App() {
   async function fetchAuthUser() {
     try {
       const authUser = await myfetch.get('/users/me')
-      if (authUser) setAuthUser(authUser)
+      if(authUser) setAuthUser(authUser)
     }
-    catch (error) {
+    catch(error) {
       console.error(error)
     }
   }
@@ -40,12 +41,13 @@ function App() {
   React.useEffect(() => {
     fetchAuthUser()
   }, [])
+
   return (
     <>
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <CssBaseline />
-          <AuthUserContext.Provider value={{ authUser, setAuthUser }}>
+          <AuthUserContext.Provider value={{authUser, setAuthUser}}>
             <TopBar />
             <Box sx={{ margin: '24px 24px 72px 24px' }}>
               <AppRoutes />

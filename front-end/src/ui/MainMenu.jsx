@@ -4,10 +4,8 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom'
-import AuthUserContext from '../contexts/AuthUserContext';
 
 export default function MainMenu() {
-  const { authUser } = React.useContext(AuthUserContext)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -41,22 +39,18 @@ export default function MainMenu() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        {authUser ?
-          <>
-            <MenuItem onClick={handleClose} component={Link} to="/" divider>
-              Página inicial
-            </MenuItem>
-            <MenuItem onClick={handleClose} component={Link} to="/customers">
-              Clientes
-            </MenuItem>
-          </>
-          :
-          <MenuItem onClick={handleClose} component={Link} to="/login">
-            Entrar
-          </MenuItem>
-        }
-      </Menu>
+        <MenuItem onClick={handleClose} component={Link} to="/" divider>
+          Página inicial
+        </MenuItem>
 
+        <MenuItem onClick={handleClose} component={Link} to="/customers">
+          Clientes
+        </MenuItem>
+
+        <MenuItem onClick={handleClose} component={Link} to="/cars">
+          Carros
+        </MenuItem>
+      </Menu>
     </div>
   );
 }
