@@ -28,10 +28,10 @@ export default function(req, res, next) {
   let token = null
 
   // 1. PROCURA O TOKEN EM UM COOKIE
-  token = req. cookies[process.env.AUTH_COOKIE_NAME]
+  token = req.cookies[process.env.AUTH_COOKIE_NAME]
 
   // 2. SE O TOKEN NÃO FOR ENCONTRADO NO COOKIE, PROCURA NO
-  // HEADER DE AUTENTICAÇÃO
+  // HEADER DE AUTORIZAÇÃO
   if(! token) {
 
     // O token é enviado por meio do cabeçalho 'authorization'
@@ -47,8 +47,9 @@ export default function(req, res, next) {
     const authHeaderParts = authHeader.split(' ')
     
     // O token corresponde à segunda parte do cabeçalho
-    const token = authHeaderParts[1]
+    token = authHeaderParts[1]
   }
+
   // Validando o token
   jwt.verify(token, process.env.TOKEN_SECRET, (error, user) => {
 
