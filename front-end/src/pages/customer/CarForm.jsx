@@ -17,13 +17,22 @@ import useWaiting from '../../ui/useWaiting'
 import myfetch from '../../lib/myfetch'
 import Car from '../../models/Cars'
 import { ZodError } from 'zod'
+import { parseISO } from 'date-fns'
+
 
 // Lista de cores em ordem alfabética
 const colors = ['Azul', 'Branco', 'Cinza', 'Preto', 'Prata', 'Vermelho']
 
 // Obter o ano atual e gerar a lista de anos de fabricação em ordem decrescente
+// Pesquisei como deixar os anos decrescentes
 const currentYear = new Date().getFullYear()
 const years = Array.from({ length: currentYear - 1959 }, (_, i) => currentYear - i)
+
+const plateMaskFormatChars = {
+  '$': '[0-9A-J]',  
+  '9': '[0-9]',   
+  'A': '[A-Z]'   
+}
 
 export default function CarForm() {
 
@@ -196,21 +205,10 @@ export default function CarForm() {
             ))}
           </TextField>
 
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={car.imported}
-                onChange={handleCheckboxChange}
-                name="imported"
-              />
-            }
-            label="Importado"
-          />
-
           <InputMask
-            mask="AAA-9@99"
-            maskChar=""
-            formatChars={{ '9': '[0-9]', '@': '[A-Ja-j]' }}
+            mask="AAA-9$99"
+            maskChar=" "
+            formatChars={plateMaskFormatChars}
             value={car.plates}
             onChange={handleFieldChange}
           >
@@ -252,6 +250,17 @@ export default function CarForm() {
             helperText={inputErrors?.selling_price}
             error={inputErrors?.selling_price}
             inputProps={{ inputMode: 'numeric' }}
+          />
+
+        <FormControlLabel
+            control={
+              <Checkbox
+                checked={car.imported}
+                onChange={handleCheckboxChange}
+                name="imported"
+              />
+            }
+            label="Importado"
           />
 
           <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>

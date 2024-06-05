@@ -16,6 +16,15 @@ import useWaiting from '../../ui/useWaiting';
 
 export default function Carlist() {
 
+  function sellingDate(sellingDate) {
+    if (sellingDate) {
+        const date = new Date(sellingDate);
+        const formattedDate = date.toLocaleDateString('pt-BR'); 
+        return formattedDate;
+    }
+    return '';
+  }
+
     const columns = [
 
         {
@@ -47,15 +56,15 @@ export default function Carlist() {
             valueGetter: (value, row) => row.imported ? "Sim" : ""
         },
         {
-            field: ' plates',
+            field: 'plates',
             headerName: 'placa',
             width: 160
         },
         {
-            field: 'selling_date',
-            headerName: 'data_venda',
-            type: 'number',
-            width: 160
+          field: 'selling_date',
+          headerName: 'Data de venda',
+          width: 150,
+          valueGetter: (value, row) => sellingDate(row.selling_date)
         },
         {
             field: 'selling_price',
@@ -132,7 +141,7 @@ export default function Carlist() {
     
       async function handleDeleteButtonClick(deleteId) {
         if(await askForConfirmation('Deseja realmente excluir este item?')) {
-          // Exibe a tela de espera
+          
           showWaiting(true)
           try {
             await myfetch.delete(`/cars/${deleteId}`)
@@ -165,7 +174,7 @@ export default function Carlist() {
           <Box sx={{
             display: 'flex',
             justifyContent: 'right',
-            mb: 2   // marginBottom
+            mb: 2   
           }}>
             <Link to="./new">
               <Button

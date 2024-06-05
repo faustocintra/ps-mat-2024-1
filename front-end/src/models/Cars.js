@@ -30,10 +30,9 @@ export default z.object({
     .optional()
     .refine(date => date <= new Date(), { message: 'A data de venda não pode estar no futuro' }),
     
-  selling_price: 
-    z.number()
-    .int({ message: 'O preço de venda deve ser um número' })
+  selling_price:
+    z.coerce.number()
     .min(1000, { message: 'O preço de venda deve ser maior ou igual a 1.000' })
     .max(5000000, { message: 'O preço de venda deve ser menor ou igual a 5.000.000' })
-    .nullable()
+    .nullable(),
 });
