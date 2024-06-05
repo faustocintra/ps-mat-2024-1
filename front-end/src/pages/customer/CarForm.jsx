@@ -18,9 +18,9 @@ import useWaiting from '../../ui/useWaiting'
 import myfetch from '../../lib/myfetch'
 import Car from '../../models/Car'
 import { ZodError } from 'zod'
- 
+
 export default function CarForm() {
- 
+
   const formDefaults = {
     brand: '',
     model: '',
@@ -31,7 +31,7 @@ export default function CarForm() {
     selling_date: null,
     selling_price: ''
   }
- 
+
   const [state, setState] = React.useState({
     car: { ...formDefaults },
     formModified: false,
@@ -42,63 +42,63 @@ export default function CarForm() {
     formModified,
     inputErrors
   } = state
- 
+
   const params = useParams()
   const navigate = useNavigate()
- 
+
   const { askForConfirmation, ConfirmDialog } = useConfirmDialog()
   const { notify, Notification } = useNotification()
   const { showWaiting, Waiting } = useWaiting()
- 
+
   const colors = [
     'Amarelo',
     'Azul',
     'Branco',
     'Cinza',
     'Prata',
-    'Preto',  
+    'Preto',
     'Rosa',
     'Verde',
     'Vermelho'
   ].sort()
- 
+
   const platesMaskFormatChars = {
     '9': '[0-9]',
     'A': '[A-Ja-j]',
-    '$': '[0-9A-Za-z]',
+    '$': '[0-9A-Ja-j]',
   }
- 
+
   const currentYear = new Date().getFullYear()
   const years = Array.from({ length: currentYear - 1959 }, (_, i) => currentYear - i)
- 
+
   function handleFieldChange(event) {
     const carCopy = { ...car }
     carCopy[event.target.name] = event.target.value
     setState({ ...state, car: carCopy, formModified: true })
   }
- 
+
   function handleCheckboxChange(event) {
     const carCopy = { ...car }
     carCopy[event.target.name] = event.target.checked
     setState({ ...state, car: carCopy, formModified: true })
   }
- 
+
   async function handleFormSubmit(event) {
     event.preventDefault()
     showWaiting(true)
     try {
       Car.parse(car)
-      if(params.id) await myfetch.put(`/cars/${params.id}`, car)
+      if (params.id) await myfetch.put(`/cars/${params.id}`, car)
       else await myfetch.post('/cars', car)
       notify('Item salvo com sucesso.', 'success', 4000, () => {
         navigate('..', { relative: 'path', replace: true })
       })
     }
-    catch(error) {
+    catch (error) {
       console.error(error)
-      if(error instanceof ZodError) {
+      if (error instanceof ZodError) {
         const messages = {}
-        for(let i of error.issues) messages[i.path[0]] = i.message
+        for (let i of error.issues) messages[i.path[0]] = i.message
         setState({ ...state, inputErrors: messages })
         notify('Há campos com valores inválidos no formulário', 'error')
       }
@@ -108,11 +108,11 @@ export default function CarForm() {
       showWaiting(false)
     }
   }
- 
+
   React.useEffect(() => {
-    if(params.id) loadData()
+    if (params.id) loadData()
   }, [])
- 
+
   async function loadData() {
     showWaiting(true)
     try {
@@ -120,7 +120,7 @@ export default function CarForm() {
       result.selling_date = parseISO(result.selling_date)
       setState({ ...state, car: result })
     }
-    catch(error) {
+    catch (error) {
       console.error(error)
       notify(error.message, 'error')
     }
@@ -128,27 +128,27 @@ export default function CarForm() {
       showWaiting(false)
     }
   }
- 
+
   async function handleBackButtonClick() {
-    if(formModified &&
-       ! await askForConfirmation('Há informações não salvas. Deseja realmente sair?')
+    if (formModified &&
+      ! await askForConfirmation('Há informações não salvas. Deseja realmente sair?')
     ) return
     navigate('..', { relative: 'path', replace: true })
   }
- 
+
   return (
     <>
       <ConfirmDialog />
       <Notification />
       <Waiting />
- 
+
       <Typography variant="h1" gutterBottom>
-        { params.id ? `Editar veículo #${params.id}` : 'Cadastrar novo veículo' }
+        {params.id ? `Editar veículo #${params.id}` : 'Cadastrar novo veículo'}
       </Typography>
- 
+
       <Box className="form-fields">
         <form onSubmit={handleFormSubmit}>
- 
+
           <TextField
             name="brand"
             label="Marca"
@@ -160,7 +160,7 @@ export default function CarForm() {
             helperText={inputErrors?.brand}
             error={inputErrors?.brand}
           />
- 
+
           <TextField
             name="model"
             label="Modelo"
@@ -172,7 +172,7 @@ export default function CarForm() {
             helperText={inputErrors?.model}
             error={inputErrors?.model}
           />
- 
+
           <TextField
             name="color"
             label="Cor"
@@ -191,7 +191,7 @@ export default function CarForm() {
               </MenuItem>
             ))}
           </TextField>
- 
+
           <TextField
             name="year_manufacture"
             label="Ano de Fabricação"
@@ -210,18 +210,7 @@ export default function CarForm() {
               </MenuItem>
             ))}
           </TextField>
- 
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={car.imported}
-                onChange={handleCheckboxChange}
-                name="imported"
-              />
-            }
-            label="Importado"
-          />
- 
+
           <InputMask
             mask="AAA-9$99"
             maskChar=" "
@@ -239,7 +228,7 @@ export default function CarForm() {
               error={inputErrors?.plates}
             />}
           </InputMask>
- 
+
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
             <DatePicker
               label="Data de Venda"
@@ -255,7 +244,7 @@ export default function CarForm() {
               }}
             />
           </LocalizationProvider>
- 
+
           <TextField
             name="selling_price"
             label="Preço de Venda"
@@ -268,7 +257,18 @@ export default function CarForm() {
             error={inputErrors?.selling_price}
             inputProps={{ inputMode: 'numeric' }}
           />
- 
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={car.imported}
+                onChange={handleCheckboxChange}
+                name="imported"
+              />
+            }
+            label="Importado"
+          />
+
           <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
             <Button
               variant="contained"
@@ -284,7 +284,7 @@ export default function CarForm() {
               Voltar
             </Button>
           </Box>
- 
+
         </form>
       </Box>
     </>
