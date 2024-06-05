@@ -51,14 +51,14 @@ export default function CarList() {
     {
       field: 'selling_date',
       headerName: 'Data de Venda',
-      width: 250,
-      valueFormatter: params => new Date(params.value).toLocaleDateString('pt-BR'),
+      width: 180,
+      valueFormatter: (value, row) => value ? new Date(value).toLocaleDateString('pt-BR') : ''
     },
     {
       field: 'selling_price',
       headerName: 'Preço de Venda',
-      width: 250,
-      valueFormatter: params => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(params.value),
+      width: 180,
+      valueFormatter: (value, row) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : ''
     },
     {
       field: '_edit',
@@ -157,7 +157,7 @@ export default function CarList() {
           <ConfirmDialog />
 
             <Typography variant="h1" gutterBottom>
-                Listagem de Clientes
+                Listagem de Carros
             </Typography>
 
             <Box sx={{
@@ -172,7 +172,7 @@ export default function CarList() {
                   color="secondary"
                   startIcon={<AddBoxIcon />}
                 >
-                  Novo Cliente               
+                  Novo Carro               
                 </Button>
               </Link>
             </Box>

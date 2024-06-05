@@ -17,6 +17,7 @@ import myfetch from '../../lib/myfetch'
 import Car from '../../models/Car'
 import { ZodError } from 'zod'
 import Checkbox from '@mui/material/Checkbox';
+import { FormControlLabel } from '@mui/material'
 
 export default function CarForm() {
 
@@ -73,17 +74,23 @@ const formDefaults = {
     '$': '[0-9A-Z]',  // letra ou digito
     '9': '[0-9]',    // somente dígitos
     'A': '[A-Z]'    // somente letras
-}
-
-
-
-  function handleFieldChange(event) {
-    const carCopy = { ...car }
-    carCopy[event.target.name] = event.target.value
-    setState({ ...state, car: carCopy, formModified: true })
   }
 
-  async function handleFormSubmit(event) {
+  function handleFieldChange(event) {
+    const { name, type, checked, value } = event.target;
+    const fieldValue = type === 'checkbox' ? checked : value;
+
+  setState(prevState => ({
+      ...prevState,
+      car: {
+          ...prevState.car,
+          [name]: fieldValue
+      },
+      formModified: true
+  }));
+}
+
+async function handleFormSubmit(event) {
     event.preventDefault()      // Evita que a página seja recarregada
     showWaiting(true)       // Exibe a tela de espera
     try {
@@ -258,18 +265,50 @@ const formDefaults = {
               )}
           </InputMask>   
           
-
           <FormControlLabel
             control={
               <Checkbox
+                name="imported"
+                color="primary"
+                variant="filled"
                 checked={car.imported}
                   onChange={handleFieldChange}
-                  name="imported"
+                  
               />
             }
              label="Carro Importado"
           />
-                
+
+          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
+            <DatePicker 
+              label="Data da Venda"
+              value={Car.birth_date}
+              onChange={ value => handleFieldChange({
+                target: { name: 'selling_date', value }
+              })}
+              slotProps={{
+                textField: {
+                  variant: 'filled',
+                  fullWidth: true,
+                  helperText: inputErrors?.selling_date,
+                  error: inputErrors?.selling_date
+                }
+              }}
+            />
+          </LocalizationProvider>             
+          
+          <TextField 
+            name="selling_price"
+            label="Preço de Venda"
+            variant="filled"
+            type='number'
+            required
+            fullWidth
+            value={car.selling_price}
+            onChange={handleFieldChange}  
+            helperText={inputErrors?.selling_price}
+            error={inputErrors?.selling_price}
+          />
 
           <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
             <Button
@@ -285,7 +324,7 @@ const formDefaults = {
             >
               Voltar
             </Button>
-          </Box> 
+          </Box>
 
           {/*<Box sx={{ fontFamily: 'monospace', display: 'flex', width: '100%' }}>
             {JSON.stringify(inputErrors)}

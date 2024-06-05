@@ -4,16 +4,14 @@ export default z.object({
 
   brand:
     z.string()
-    .max(25, { message: 'O nome da marca deve ter, no máximo, 25 caracteres' })
-    .includes(' ', { message: 'O nome deve conter um espaço em branco separando nome e sobrenome' }),
+    .max(25, { message: 'O nome da marca deve ter, no mínimo, 25 caracteres' }),    
 
   model:
     z.string()
-    .max(25, { message: 'O modelo deve ter, no máximo, 25 caracteres' }),  
+    .max(25, { message: 'O modelo deve ter, no mínimo, 25 caracteres' }),  
 
   color:
-    z.string()
-    .max(25, { message: 'A cor deve ter no máximo 25 caracteres' }),
+    z.string(),    
 
   imported: z.boolean(),
 
@@ -33,7 +31,7 @@ export default z.object({
 
   selling_price:
     z.coerce.number()
-    .gte(1000) // alias .min(5)    
-    .lte(5000000) // alias .max(5)
-    .nullable() 
+    .min(1000, { message: 'O preço de venda deve ser maior ou igual a 1.000' })
+    .max(5000000, { message: 'O preço de venda deve ser menor ou igual a 5.000.000' })
+    .nullable(),
 })
