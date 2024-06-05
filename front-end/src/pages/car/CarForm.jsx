@@ -36,7 +36,7 @@ export default function CarForm() {
     year_manufacture: '',
     imported: false,
     selling_date: null,
-    selling_price: ''
+    selling_price: null
   }
 
   const [state, setState] = React.useState({
@@ -160,7 +160,9 @@ export default function CarForm() {
 
       // Converte o formato de data armazenado no banco de dados
       // para o formato reconhecido pelo componente DatePicker
-      result.selling_date = parseISO(result.selling_date)
+      if(result.selling_date){
+        result.selling_date = parseISO(result.selling_date)
+      }
 
       setState({ ...state, car: result })
     }

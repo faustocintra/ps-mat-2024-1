@@ -50,7 +50,7 @@ export default function CarList() {
       field: 'selling_date',
       headerName: 'Data de Venda',
       width: 200,
-      valueGetter: (value, row) => format(row.selling_date, 'dd/MM/yyyy')
+      valueGetter: (value, row) => row.selling_date ? format(row.selling_date, 'dd/MM/yyyy') : ''
     },
     {
       field: 'selling_price',
