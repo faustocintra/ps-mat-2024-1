@@ -23,7 +23,7 @@ export default function FooterBar() {
           }
         }}
       >
-        Desenvolvido com <CoffeeIcon fontSize="small" /> por <a href="mailto:professor@faustocintra.com.br">Valter Gomes</a>, 2024
+        Desenvolvido com <CoffeeIcon fontSize="small" /> por <a href="mailto:professor@faustocintra.com.br">Valter Gomes Júnior</a>, 2024
       </Typography>
     </Toolbar>
   )

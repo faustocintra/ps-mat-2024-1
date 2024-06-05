@@ -65,7 +65,7 @@ export default function CarForm() {
   const platesMaskFormatChars = {
     '9': '[0-9]',
     'A': '[A-Ja-j]',
-    '$': '[0-9A-Za-z]',
+    '$': '[0-9A-Ja-j]',
   }
  
   const currentYear = new Date().getFullYear()
