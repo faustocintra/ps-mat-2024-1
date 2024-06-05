@@ -18,9 +18,9 @@ import useWaiting from '../../ui/useWaiting'
 import myfetch from '../../lib/myfetch'
 import Car from '../../models/Car'
 import { ZodError } from 'zod'
-
+ 
 export default function CarForm() {
-
+ 
   const formDefaults = {
     brand: '',
     model: '',
@@ -31,7 +31,7 @@ export default function CarForm() {
     selling_date: null,
     selling_price: ''
   }
-
+ 
   const [state, setState] = React.useState({
     car: { ...formDefaults },
     formModified: false,
@@ -42,32 +42,32 @@ export default function CarForm() {
     formModified,
     inputErrors
   } = state
-
+ 
   const params = useParams()
   const navigate = useNavigate()
  
   const { askForConfirmation, ConfirmDialog } = useConfirmDialog()
   const { notify, Notification } = useNotification()
   const { showWaiting, Waiting } = useWaiting()
-
+ 
   const colors = [
     'Amarelo',
-    'Azul', 
-    'Branco', 
-    'Cinza', 
+    'Azul',
+    'Branco',
+    'Cinza',
     'Prata',
     'Preto',  
     'Rosa',
     'Verde',
     'Vermelho'
   ].sort()
-
+ 
   const platesMaskFormatChars = {
     '9': '[0-9]',
-    'A': '[A-Za-z]',
+    'A': '[A-Ja-j]',
     '$': '[0-9A-Ja-j]',
   }
-
+ 
   const currentYear = new Date().getFullYear()
   const years = Array.from({ length: currentYear - 1959 }, (_, i) => currentYear - i)
  
@@ -211,17 +211,6 @@ export default function CarForm() {
             ))}
           </TextField>
  
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={car.imported}
-                onChange={handleCheckboxChange}
-                name="imported"
-              />
-            }
-            label="Importado"
-          />
- 
           <InputMask
             mask="AAA-9$99"
             maskChar=" "
@@ -267,6 +256,18 @@ export default function CarForm() {
             helperText={inputErrors?.selling_price}
             error={inputErrors?.selling_price}
             inputProps={{ inputMode: 'numeric' }}
+          />
+
+           
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={car.imported}
+                onChange={handleCheckboxChange}
+                name="imported"
+              />
+            }
+            label="Importado"
           />
  
           <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
