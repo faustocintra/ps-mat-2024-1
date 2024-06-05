@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, IconButton, Paper, Button, TextField, Box, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
+import { Typography, IconButton, Paper, Button, TextField, Box, MenuItem, Checkbox, FormControlLabel, Grid } from "@mui/material";
 
 import { useParams, useNavigate } from "react-router-dom";
 import InputMask from "react-input-mask"
@@ -22,7 +22,7 @@ import { ZodError } from 'zod'
 
 
 export default function CarForm() {
-   
+
 
     const formDefauts = {
         brand: '',
@@ -160,16 +160,16 @@ export default function CarForm() {
         }));
     }
 
-    
+
 
     async function handleFormSubmit(e) {
         e.preventDefault()  //evita q a pagina seja recarrecagada
         showWaiting(true)
-             //exibe Backdrop de espera
+        //exibe Backdrop de espera
         try {
             // Invoca o Zod para validar os dados por meio do model Car
             car.selling_price = parseFloat(car.selling_price)
-            
+
             Car.parse(car)
 
             if (params.id) await myfetch.put(`/cars/${params.id}`, car)
@@ -201,7 +201,7 @@ export default function CarForm() {
 
     React.useEffect(() => {
         if (params.id) loadData()
-    },[])
+    }, [])
 
     async function loadData() {
         showWaiting(true)
@@ -246,9 +246,10 @@ export default function CarForm() {
             </Typography>
 
             <Box className="form-fields" sx={{ ml: 25, mr: 25 }}>
+
                 <form onSubmit={handleFormSubmit}>
 
-                    <TextField
+                    <TextField sx={{ mr: 10 }}
                         name="brand"
                         label="Marca"
                         variant="filled"
@@ -276,7 +277,7 @@ export default function CarForm() {
 
                     <FormControlLabel
                         control={
-                            <Checkbox
+                            <Checkbox sx={{ width: 100 }}
                                 name="imported"
                                 checked={car.imported}
                                 onChange={handleFieldChange}
@@ -425,6 +426,7 @@ export default function CarForm() {
 
 
                 </form>
+
             </Box>
         </>
     )

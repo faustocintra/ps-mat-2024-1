@@ -27,6 +27,7 @@ export default z.object({
 
     color:
         z.string()
+            .min(1, { message: "Escolha uma cor" })
             .max(12, { message: 'A cor pode ter, no maximo 12 caracteres' }),
 
     year_manufacture:
