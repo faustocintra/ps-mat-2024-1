@@ -2,6 +2,7 @@
 import prisma from '../database/client.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+
 const controller = {}   // Objeto vazio
 
 // Criando um novo usuário
@@ -122,48 +123,81 @@ controller.delete = async function (req, res) {
   }
 }
 
-controller.login = async function(req, res){
-  try{
-    //busca o usuario pelo email passado
+controller.login = async function (req, res) {
+  try {
+
+    // Busca o usuário pelo e-mail passado
     const user = await prisma.user.findUnique({
-      where: {email: req.body?.email}
+      where: { email: req.body?.email }
     })
+
+    // Se o usuário não for encontrado, retorna
+    // HTTP 401: Unauthorized
     if(! user) return res.send(401).end()
 
+    // Usuário encontrado, conferimos a senha
     const passwordOk = await bcrypt.compare(req.body.password, user.password)
 
-    if(! passwordOk) return res.send(401).end
+    // Senha errada, retorna
+    // HTTP 401: Unauthorized
+    if(! passwordOk) return res.send(401).end()
 
-    //user e senha ok, passamos ao procedimento de gerar o token
-    //excluimos o campo password do usuario para que ele nao seja incluido no token
-    if (user.password) delete user.password
-  
-    //geraçao token
+    // Usuário e senha OK, passamos ao procedimento de gerar o token
+
+    // Excluímos o campo "password" do usuário, para que ele não
+    // seja incluído no token
+    if(user.password) delete user.password
+
+    // Geração do token
     const token = jwt.sign(
-      user, //dados do usuario
-      process.env.TOKEN_SECRET, //senha para criptrografar o token
-     { expiresIn: '24h' } //prazo de validade do token
+      user,                       // Dados do usuário
+      process.env.TOKEN_SECRET,   // Senha para criptografar o token
+      { expiresIn: '24h' }        // Prazo de validade do token
     )
-      //Retorna HTTP 200: Ok com o token
-    res.send({token})
-  
-  
-  
-  
+
+    // Formamos o cookie para enviar ao front-end
+    res.cookie(process.env.AUTH_COOKIE_NAME, token, {
+      httpOnly: true,   // O cookie ficará inacessível para JS no front-end
+      secure: true,
+      sameSite: 'None',
+      path: '/',
+      maxAge: 24 * 60 * 60 * 1000 // 24h
+    })
+
+    // Retorna HTTP 200: OK com o token e o usuário autenticado
+    //res.send({token, user})
+
+    // HTTP 204: No Content
+    res.send({user})    // O token não é mais enviado na resposta do login
+
   }
-  catch(error){
+  catch(error) {
     console.log(error)
-  
+
     // HTTP 500: Internal Server Error
     res.status(500).end()
- 
-  
   }
 }
 
-controller.me = function (req, res){
-  //retorna os informaçoes do usuario logado que foram armazenadas em req.autuser em src/midlleware/auth.js
-  //http Ok Implicito
+controller.logout = function(req, res) {
+  // "Limpa" o conteúdo do cookie que contém o token de autenticação
+  res.cookie(process.env.AUTH_COOKIE_NAME, '', {
+    httpOnly: true,   // O cookie ficará inacessível para JS no front-end
+      secure: true,
+      sameSite: 'None',
+      path: '/',
+      maxAge: 10 // O cookie expira em 10ms
+  })
+
+  res.status(204).end()
+}
+
+controller.me = function(req, res) {
+  // Retorna as informações do usuário logado que foram
+  // armazendas em req.authUser em src/middleware/auth.js
+  
+  // HTTP: OK (implícito)
   res.send(req.authUser)
 }
+
 export default controller

@@ -74,4 +74,23 @@ controller.update = async function(req, res) {
   }
 }
 
+controller.delete = async function (req, res) {
+  try {
+    const result = await prisma.car.delete({
+      where: { id: Number(req.params.id) }
+    })
+
+    // Encontrou e excluiu ~> HTTP 204: No Content
+    if(result) res.status(204).end()
+    // Não encontrou (e não excluiu) ~> HTTP 404: Not Found
+    else res.status(404).end()
+  }
+  catch(error) {
+    console.log(error)
+
+    // HTTP 500: Internal Server Error
+    res.status(500).end()
+  }
+}
+
 export default controller
