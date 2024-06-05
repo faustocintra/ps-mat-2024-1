@@ -31,6 +31,7 @@ export default z.object({
 
     color:
         z.string()
+            .min(1, {message: 'Selecione uma cor'})
             .max(12, { message: 'A cor pode ter, no máximo, 12 caracteres' }),
 
     imported:

@@ -223,10 +223,10 @@ export default function CarForm() {
                 {params.id ? `Editar carro #${params.id}` : 'Cadastrar novo carro'}
             </Typography>
 
-            <Box className="form-fields">
+            <Box className="form-fields" sx={{ ml: 25, mr:25}}>
                 <form onSubmit={handleFormSubmit}>
 
-                    <TextField
+                    <TextField sx={{ mr: 10 }}
                         name="brand"
                         label="Marca"
                         variant="filled"
@@ -252,7 +252,7 @@ export default function CarForm() {
 
                     <FormControlLabel
                         control={
-                            <Checkbox
+                            <Checkbox sx={{ width: 100}}
                                 name="imported"
                                 checked={car.imported}
                                 onChange={handleFieldChange}
