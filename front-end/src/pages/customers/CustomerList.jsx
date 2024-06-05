@@ -39,7 +39,7 @@ export default function CustomerList() {
       headerName: 'Município/UF',
       width: 200,
       // Colocando dois campos na mesma célula
-      valueGetter: (value, row) => row.municipality + '/' + row.state
+      valueGetter: (value, row) => value + ' / ' + row.state
     },
     {
       field: 'phone',
@@ -111,7 +111,7 @@ export default function CustomerList() {
     }
     catch(error) {
       console.error(error)
-      notify(erro.message, 'error')
+      notify(error.message, 'error')
       }
     finally {
       showWaiting(false)
