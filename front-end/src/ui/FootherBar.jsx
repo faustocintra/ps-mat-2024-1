@@ -1,7 +1,7 @@
-import React from 'react';
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import CoffeIcon from '@mui/icons-material/Coffee'
+import React from 'react'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import CoffeeIcon from '@mui/icons-material/Coffee';
 
 export default function FooterBar() {
   return (
@@ -16,16 +16,15 @@ export default function FooterBar() {
         backgroundColor: 'action.disabledBackground'
       }}
     >
-        <Typography variant="caption"
-        sx= {{
+      <Typography variant="caption"
+        sx={{
           '& a': {
             color: 'secondary.light'
           }
         }}
-        >
-          Desenvolvido com <CoffeIcon fontzise="small" /> por <a
-          href="biancakaroliner04@gmail.com">Bianca Karoline Ramos</a>, 2024
-        </Typography>
+      >
+        Desenvolvido com <CoffeeIcon fontSize="small" /> por <a href="mailto:professor@faustocintra.com.br">Giovanna Cerino</a>, 2024
+      </Typography>
     </Toolbar>
   )
 }

@@ -1,8 +1,8 @@
 import { z } from 'zod';
-
+ 
 // Obter o ano atual
 const currentYear = new Date().getFullYear();
-
+ 
 export default z.object({
   brand:
     z.string()
@@ -27,12 +27,12 @@ export default z.object({
    
   selling_date:
     z.coerce.date()
-    .optional()
-    .refine(date => date <= new Date(), { message: 'A data de venda não pode estar no futuro' }),
+    .refine(date => date <= new Date(), { message: 'A data de venda não pode estar no futuro' })
+    .nullable(),
    
   selling_price:
     z.coerce.number()
     .min(1000, { message: 'O preço de venda deve ser maior ou igual a 1.000' })
     .max(5000000, { message: 'O preço de venda deve ser menor ou igual a 5.000.000' })
-    .nullable(), // O campo é opcional
+    .nullable(),
 });
