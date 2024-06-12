@@ -63,6 +63,15 @@ function processResponse(response) {
   } else throw new HttpError(response.status, getErrorDescription(response))
 }
 
+function buildUrl(path) {
+  // If path is an absolute URL, use it directly
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path;
+  }
+  // Otherwise, append the path to the base URL
+  return `${baseUrl}${path}`;
+}
+
 myfetch.post = async function(path, body) {
   const response = await fetch(baseUrl + path, getOptions(body, 'POST'))
   return processResponse(response)
@@ -74,7 +83,7 @@ myfetch.put = async function(path, body) {
 }
 
 myfetch.get = async function(path) {
-  const response = await fetch(baseUrl + path, getOptions())
+  const response = await fetch(buildUrl(path), getOptions())
   return processResponse(response)
 }
 
