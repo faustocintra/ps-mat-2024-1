@@ -50,7 +50,11 @@ export default function MainMenu() {
 
         <MenuItem onClick={handleClose} component={Link} to="/cars">
           Carros
-        </MenuItem>          
+        </MenuItem>
+
+        <MenuItem onClick={handleClose} component={Link} to="/provas">
+          Sobre a Página
+        </MenuItem>            
       </Menu>
     </div>
   );
