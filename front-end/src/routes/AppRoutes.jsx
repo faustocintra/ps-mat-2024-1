@@ -14,6 +14,7 @@ import CustomerForm from '../pages/customer/CustomerForm'
 import AuthGuard from './AuthGuard'
 import CarList from '../pages/car/CarList'
 import CarForm from '../pages/car/CarForm'
+import About from '../pages/About'
 
 export default function AppRoutes() {
 
@@ -28,6 +29,7 @@ export default function AppRoutes() {
       <Route path="/cars" element={<AuthGuard> <CarList /> </AuthGuard>} />
       <Route path="/cars/new" element={<AuthGuard> <CarForm /> </AuthGuard>} />
       <Route path="/cars/:id" element={<AuthGuard> <CarForm /> </AuthGuard>} />
+      <Route path="/about" element={<About />} />
     </Routes>
   )
 }
