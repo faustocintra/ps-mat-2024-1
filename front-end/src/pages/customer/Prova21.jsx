@@ -16,7 +16,7 @@ import useWaiting from '../../ui/useWaiting'
 import { boolean } from 'zod';
 import { DatePicker } from '@mui/x-date-pickers';
 
-export default function CarList() {
+export default function Prova2() {
 
   const columns = [
     { 
@@ -138,7 +138,7 @@ export default function CarList() {
   async function fetchData() {
     showWaiting(true)
     try {
-      const result = await myfetch.get('/cars')
+      const result = await myfetch.get('/prova2')
       setState({
         ...state,
         cars: result
@@ -158,7 +158,7 @@ export default function CarList() {
       // Exibe a tela de espera
       showWaiting(true)
       try {
-        await myfetch.delete(`/cars/${deleteId}`)
+        await myfetch.delete(`/prova2/${deleteId}`)
 
         // Recarrega os dados da grid
         fetchData()
@@ -182,14 +182,8 @@ export default function CarList() {
       <ConfirmDialog />
 
       <Typography variant="h1" gutterBottom>
-        Sobre o projeto Karangos
+        Sobre o Projeto Karangos
       </Typography>
-
-      <Paper elevation={10}>
-        <Box sx={{ height: 100, width: '100%' }}>
-        "Karangos é um projeto desenvolvido pelo Prof. Fausto Cintra juntamente os alunos do 5º semestre matutino de ADS da Fatec Franca. Seu objetivo é demonstrar as funcionalidades e possibilidades do React em conjunto com a biblioteca de componentes Material UI, acessando uma API REST desenvolvida com Node.js e Express. Clique sobre ícone do menu no canto superior esquerdo para acessar as funcionalidades."
-        </Box>
-      </Paper>
 
       <Box sx={{
         display: 'flex',
