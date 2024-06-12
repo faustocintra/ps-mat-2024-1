@@ -43,7 +43,11 @@ export default function MainMenu() {
           Página inicial
         </MenuItem>
 
-        <MenuItem onClick={handleClose} component={Link} to="/customers">
+        <MenuItem onClick={handleClose} component={Link} to="/about" divider>
+          Sobre
+        </MenuItem>
+
+        <MenuItem onClick={handleClose} component={Link} to="/customers" divider>
           Clientes
         </MenuItem>
 

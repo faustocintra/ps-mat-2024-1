@@ -33,6 +33,11 @@ model User {
   is_admin         Boolean       @default(false)
 }
 
+model About {
+  id               Int           @id @default(autoincrement())
+  info             String        // Informações
+}
+
 model Customer {
   id               Int           @id @default(autoincrement())
   name             String        
