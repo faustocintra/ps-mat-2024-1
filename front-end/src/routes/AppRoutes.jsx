@@ -9,11 +9,14 @@ import CustomerForm from '../pages/Customer/CustomerForm'
 
 import CarList from '../pages/Car/CarList'
 import CarForm from '../pages/Car/CarForm'
- 
+
+import Bia from '../pages/Bia';
+
 /*
   AuthRoute verifica se o usuário ainda está autenticado
   quando há uma mundança de rota no front-end
 */
+
 import AuthGuard from './AuthGuard'
  
 export default function AppRoutes() {
@@ -29,6 +32,8 @@ export default function AppRoutes() {
       <Route path="/cars" element={ <AuthGuard> <CarList /> </AuthGuard>} />
       <Route path="/cars/new" element={ <AuthGuard> <CarForm /> </AuthGuard>} />
       <Route path="/cars/:id" element={ <AuthGuard> <CarForm /> </AuthGuard>} />
+
+      <Route path="/sobre" element={<Bia />} />
 
     </Routes>
   )
