@@ -14,6 +14,7 @@ import CarForm from '../ui/pages/Car/CarForm'
   quando há uma mudança de rota no front-end
 */
 import AuthGuard from './AuthGuard'
+import PageProva from '../ui/pages/PageProva'
 
 export default function AppRoutes() {
 
@@ -27,6 +28,7 @@ export default function AppRoutes() {
       <Route path="/cars" element={ <AuthGuard> <CarList/> </AuthGuard>} />
       <Route path="/cars/new" element={ <AuthGuard> <CarForm /> </AuthGuard>} />
       <Route path="/cars/:id" element={ <AuthGuard> <CarForm /> </AuthGuard>} />
-    </Routes>
+      <Route path="/projeto" element={ <AuthGuard> <PageProva /> </AuthGuard>} />
+      </Routes>
   )
 }

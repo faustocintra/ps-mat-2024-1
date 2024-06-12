@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom'
+import PageProva from './pages/PageProva';
 
 export default function MainMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -51,6 +52,11 @@ export default function MainMenu() {
         <MenuItem onClick={handleClose} component={Link} to="/cars">
           Carros
         </MenuItem>
+
+        <MenuItem onClick={handleClose} component={Link} to="/projeto">
+          Sobre o Projeto
+        </MenuItem>
+
       </Menu>
     </div>
   );
