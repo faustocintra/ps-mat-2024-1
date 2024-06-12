@@ -55,6 +55,9 @@ export default function MainMenu() {
         <MenuItem onClick={handleClose} component={Link} to="/customers/new" divider>
           Cadastro de clientes
         </MenuItem>
+        <MenuItem onClick={handleClose} component={Link} to="/about" divider>
+          Sobre o projeto Karangos
+        </MenuItem>
       </Menu>
     </div>
   );
