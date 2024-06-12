@@ -9,6 +9,8 @@ import CustomerForm from '../pages/customer/CustomerForm'
 
 import CarList from '../pages/Car/CarList'
 import CarForm from '../pages/Car/CarForm'
+
+import About from '../pages/AboutPage'
  
 /*
   AuthRoute verifica se o usuário ainda está autenticado
@@ -29,6 +31,7 @@ export default function AppRoutes() {
       <Route path="/cars" element={ <AuthGuard> <CarList /> </AuthGuard>} />
       <Route path="/cars/new" element={ <AuthGuard> <CarForm /> </AuthGuard>} />
       <Route path="/cars/:id" element={ <AuthGuard> <CarForm /> </AuthGuard>} />
+      <Route path="/about" element={<About />} />
 
     </Routes>
   )
