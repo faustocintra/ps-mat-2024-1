@@ -43,9 +43,15 @@ export default function MainMenu() {
           Página inicial
         </MenuItem>
 
-        <MenuItem onClick={handleClose} component={Link} to="/customers">
+        <MenuItem onClick={handleClose} component={Link} to="/customers" divider>
           Clientes
         </MenuItem>
+
+        {/* 6. Crie uma entrada de menu que carregue a rota recém-criada. */}
+        <MenuItem onClick={handleClose} component={Link} to="/about-project">
+          Sobre o projeto Karangos
+        </MenuItem>
+
       </Menu>
     </div>
   );

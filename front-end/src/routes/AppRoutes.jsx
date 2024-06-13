@@ -7,6 +7,8 @@ import LoginPage from '../pages/LoginPage'
 import CustomerList from '../pages/customer/CustomerList'
 import CustomerForm from '../pages/customer/CustomerForm'
 
+import AboutProject from '../pages/AboutProject'
+
 /*
   AuthGuard verifica se o usuário ainda está autenticado
   quando há uma mudança de rota no front-end
@@ -23,6 +25,9 @@ export default function AppRoutes() {
       <Route path="/customers" element={ <AuthGuard> <CustomerList /> </AuthGuard>} />
       <Route path="/customers/new" element={ <AuthGuard> <CustomerForm /> </AuthGuard>} />
       <Route path="/customers/:id" element={ <AuthGuard> <CustomerForm /> </AuthGuard>} />
+
+      {/* 5. Crie uma rota para esse componente criado na etapa 1. */}
+      <Route path="/about-project" element = { <AboutProject /> } />
     </Routes>
   )
 }
